@@ -1,13 +1,12 @@
 import { StatusCodes } from "http-status-codes";
+import { residentService } from "../services/residentService.js";
 
-const residentCreate = async (req, res, next) => {
+const createResident = async (req, res, next) => {
   try {
-    const { name, phone } = req.body;
-    // Simulate saving to the database
-    const newResident = { id: Date.now(), name, phone };
+    const createdResident = await residentService.createResident(req.body);
     res.status(StatusCodes.CREATED).json({
       message: "Resident created successfully",
-      resident: newResident,
+      resident: createdResident,
     });
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -16,7 +15,74 @@ const residentCreate = async (req, res, next) => {
     });
   }
 };
+const readResident = async (req, res, next) => {
+  try {
+    console.log(req.params.id);
+    const resident = await residentService.readResident(req.params.id);
+    if (resident.status) {
+      return res.status(resident.status).json({
+        message: resident.message,
+        error: resident.error,
+      });
+    }
+    res.status(StatusCodes.OK).json({
+      message: "Resident retrieved successfully",
+      resident,
+    });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error retrieving resident",
+      error: error.message,
+    });
+  }
+};
+const removeResident = async (req, res, next) => {
+  try {
+    const removedResident = await residentService.removeResident(req.params.id);
+    if (removedResident.status) {
+      return res.status(removedResident.status).json({
+        message: removedResident.message,
+        error: removedResident.error,
+      });
+    }
+    res.status(StatusCodes.OK).json({
+      message: "Resident removed successfully",
+      resident: removedResident,
+    });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error removing resident",
+      error: error.message,
+    });
+  }
+};
+const updateResident = async (req, res, next) => {
+  try {
+    const updatedResident = await residentService.updateResident(
+      req.params.id,
+      req.body
+    );
+    if (updatedResident.status) {
+      return res.status(updatedResident.status).json({
+        message: updatedResident.message,
+        error: updatedResident.error,
+      });
+    }
+    res.status(StatusCodes.OK).json({
+      message: "Resident updated successfully",
+      resident: updatedResident,
+    });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error updating resident",
+      error: error.message,
+    });
+  }
+};
 export const residentController = {
-  residentCreate,
+  createResident,
+  readResident,
+  removeResident,
+  updateResident,
   // more
 };
