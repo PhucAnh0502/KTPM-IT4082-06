@@ -9,6 +9,41 @@ router.get("/", (req, res) => {
     message: "Welcome to the Fee Collection API",
   });
 });
+/**
+ * @swagger
+ * /fee-collections/create:
+ *   post:
+ *     summary: Create a new fee collection
+ *     tags:
+ *       - Fee Collections
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Fees:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["Fee1", "Fee2", "Fee3"]
+ *               CreateDate:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-05-15"
+ *               DueDate:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-06-15"
+ *     responses:
+ *       201:
+ *         description: Fee collection created successfully
+ *       400:
+ *         description: Validation failed
+ */
 router.post(
   "/create",
   authMiddleware,
@@ -16,18 +51,110 @@ router.post(
   feeCollectionValidation.createFeeCollection,
   feeCollectionController.createFeeCollection
 );
+/**
+ * @swagger
+ * /fee-collections/{id}:
+ *   get:
+ *     summary: Get a fee collection by ID
+ *     tags:
+ *       - Fee Collections
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Fee collection ID
+ *     responses:
+ *       200:
+ *         description: Fee collection retrieved successfully
+ *       400:
+ *         description: Validation failed
+ *       404:
+ *         description: Fee collection not found
+ */
 router.get(
   "/:id",
   authMiddleware,
   authRoles("accountant"),
   feeCollectionController.readFeeCollection
 );
+/**
+ * @swagger
+ * /fee-collections/{id}:
+ *   delete:
+ *     summary: Delete a fee collection by ID
+ *     tags:
+ *       - Fee Collections
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Fee collection ID
+ *     responses:
+ *       200:
+ *         description: Fee collection deleted successfully
+ *       400:
+ *         description: Validation failed
+ *       404:
+ *         description: Fee collection not found
+ */
 router.delete(
   "/:id",
   authMiddleware,
   authRoles("accountant"),
   feeCollectionController.removeFeeCollection
 );
+/**
+ * @swagger
+ * /fee-collections/{id}:
+ *   put:
+ *     summary: Update a fee collection by ID
+ *     tags:
+ *       - Fee Collections
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Fee collection ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Fees:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["Fee1", "Fee2"]
+ *               CreateDate:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-05-15"
+ *               DueDate:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-06-30"
+ *     responses:
+ *       200:
+ *         description: Fee collection updated successfully
+ *       400:
+ *         description: Validation failed
+ *       404:
+ *         description: Fee collection not found
+ */
 router.put(
   "/:id",
   authMiddleware,
