@@ -13,6 +13,7 @@ npm run dev
 
 
 - Open: POSTMEN
+- swagger : http://localhost:3003/api-docs/
 
 ### DATABASE
 - MongoDB WebUI: http://127.0.0.1:8081/
