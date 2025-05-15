@@ -27,7 +27,18 @@ const createResident = async (req, res, next) => {
 };
 const updateResident = async (req, res, next) => {
   const schema = Joi.object({
-    Name: Joi.string().required(),
+    Name: Joi.string().optional(),
+    CID: Joi.string().optional(),
+    DateOfBirth: Joi.date().optional(),
+    Gender: Joi.string().valid("Male", "Female", "Other").optional(),
+    HouseHoldID: Joi.array().items(Joi.string()).optional(),
+    AccountID: Joi.string().optional(),
+    Occupation: Joi.string().optional(),
+    Status: Joi.string()
+      .valid("Temporary", "Permanent", "Moved", "Dead")
+      .optional(),
+    PhoneNumber: Joi.string().optional(),
+    HouseHoldRelation: Joi.string().optional(),
   });
   try {
     await schema.validateAsync(req.body);
