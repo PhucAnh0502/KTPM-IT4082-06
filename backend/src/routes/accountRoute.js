@@ -252,4 +252,48 @@ router.post(
   accountValidation.forgetPassword,
   accountController.forgetPassword
 );
+/**
+ * @swagger
+ * /accounts/get-all:
+ *   get:
+ *     summary: Get all accounts
+ *     tags:
+ *       - Accounts
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of all accounts retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "ACC12345"
+ *                   Email:
+ *                     type: string
+ *                     example: "user@example.com"
+ *                   Role:
+ *                     type: string
+ *                     enum:
+ *                       - admin
+ *                       - leader
+ *                       - accountant
+ *                       - resident
+ *                     example: "resident"
+ *       400:
+ *         description: Validation failed
+ *       401:
+ *         description: Unauthorized
+ */
+router.get(
+  "/get-all",
+  authMiddleware,
+  authRoles("leader", "admin"),
+  accountController.getAllAccounts
+);
 export const accountRoute = router;

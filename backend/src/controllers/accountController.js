@@ -89,6 +89,20 @@ const forgetPassword = async (req, res, next) => {
     });
   }
 };
+const getAllAccounts = async (req, res, next) => {
+  try {
+    const accounts = await accountService.getAllAccounts();
+    res.status(StatusCodes.OK).json({
+      message: "Accounts fetched successfully",
+      accounts: accounts,
+    });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error fetching accounts",
+      error: error.message,
+    });
+  }
+};
 export const accountController = {
   createAccount,
   loginAccount,
@@ -96,5 +110,6 @@ export const accountController = {
   removeAccount,
   updateAccount,
   forgetPassword,
+  getAllAccounts,
   // more
 };

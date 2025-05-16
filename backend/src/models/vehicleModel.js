@@ -34,4 +34,47 @@ const create = async (data) => {
     throw new Error("Error creating vehicle");
   }
 };
-export { Vehicle, create };
+const read = async (id) => {
+  try {
+    const vehicle = await Vehicle.findById(id);
+    if (!vehicle) {
+      throw new Error("Vehicle not found");
+    }
+    return vehicle;
+  } catch (error) {
+    throw new Error("Error reading vehicle");
+  }
+};
+const remove = async (id) => {
+  try {
+    const vehicle = await Vehicle.findByIdAndDelete(id);
+    if (!vehicle) {
+      throw new Error("Vehicle not found");
+    }
+    return vehicle;
+  } catch (error) {
+    throw new Error("Error deleting vehicle");
+  }
+};
+const update = async (id, data) => {
+  try {
+    const vehicle = await Vehicle.findByIdAndUpdate(id, data, {
+      new: true,
+    });
+    if (!vehicle) {
+      throw new Error("Vehicle not found");
+    }
+    return vehicle;
+  } catch (error) {
+    throw new Error("Error updating vehicle");
+  }
+};
+const getAll = async () => {
+  try {
+    const vehicles = await Vehicle.find();
+    return vehicles;
+  } catch (error) {
+    throw new Error("Error fetching vehicles");
+  }
+};
+export { Vehicle, create, read, remove, update, getAll };

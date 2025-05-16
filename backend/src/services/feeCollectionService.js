@@ -1,4 +1,10 @@
-import { create, read, remove, update } from "../models/feeCollectionModel.js";
+import {
+  create,
+  read,
+  remove,
+  update,
+  getAll,
+} from "../models/feeCollectionModel.js";
 
 const createFeeCollection = async (data) => {
   try {
@@ -69,9 +75,22 @@ const updateFeeCollection = async (id, data) => {
     };
   }
 };
+const getAllFeeCollections = async () => {
+  try {
+    const feeCollections = await getAll();
+    return feeCollections;
+  } catch (error) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: "Error fetching fee collections",
+      error: error.message,
+    };
+  }
+};
 export const feeCollectionService = {
   createFeeCollection,
   readFeeCollection,
   removeFeeCollection,
   updateFeeCollection,
+  getAllFeeCollections,
 };

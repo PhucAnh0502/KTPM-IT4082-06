@@ -56,7 +56,58 @@ router.post(
   houseHoldValidation.createHouseHold,
   houseHoldController.createHouseHold
 );
-
+/**
+ * @swagger
+ * /households/get-all:
+ *   get:
+ *     summary: Get all households
+ *     tags:
+ *       - Households
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of all households retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "HH12345"
+ *                   HouseHoldMember:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     example: ["Member1", "Member2"]
+ *                   Area:
+ *                     type: number
+ *                     example: 120.5
+ *                   HouseHoldHeadID:
+ *                     type: string
+ *                     example: "HHH12345"
+ *                   Address:
+ *                     type: string
+ *                     example: "123 Main Street"
+ *                   VehicleID:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     example: ["V123", "V124"]
+ *       400:
+ *         description: Validation failed
+ *       401:
+ *         description: Unauthorized
+ */
+router.get(
+  "/get-all",
+  authMiddleware,
+  authRoles("leader"),
+  houseHoldController.getAllHouseHolds
+);
 /**
  * @swagger
  * /households/{id}:
@@ -176,4 +227,5 @@ router.put(
   houseHoldValidation.updateHouseHold,
   houseHoldController.updateHouseHold
 );
+
 export const houseHoldRoute = router;

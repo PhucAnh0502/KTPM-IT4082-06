@@ -103,4 +103,21 @@ const forget = async (data) => {
     throw new Error("Error during password reset");
   }
 };
-export { Account, create, login, changePassword, remove, update, forget };
+const getAll = async () => {
+  try {
+    const accounts = await Account.find();
+    return accounts;
+  } catch (error) {
+    throw new Error("Error fetching accounts");
+  }
+};
+export {
+  Account,
+  create,
+  login,
+  changePassword,
+  remove,
+  update,
+  forget,
+  getAll,
+};

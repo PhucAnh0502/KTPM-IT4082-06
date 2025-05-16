@@ -83,9 +83,24 @@ const updateFeeCollection = async (req, res, next) => {
     });
   }
 };
+const getAllFeeCollections = async (req, res, next) => {
+  try {
+    const feeCollections = await feeCollectionService.getAllFeeCollections();
+    res.status(200).json({
+      message: "Fee collections retrieved successfully",
+      feeCollections,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error retrieving fee collections",
+      error: error.message,
+    });
+  }
+};
 export const feeCollectionController = {
   createFeeCollection,
   readFeeCollection,
   removeFeeCollection,
   updateFeeCollection,
+  getAllFeeCollections,
 };

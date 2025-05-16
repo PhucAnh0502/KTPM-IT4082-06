@@ -6,6 +6,7 @@ import {
   update,
   remove,
   forget,
+  getAll,
 } from "../models/accountModel.js";
 
 const createAccount = async (data) => {
@@ -76,6 +77,14 @@ const forgetPassword = async (data) => {
     throw new Error("Error during password reset");
   }
 };
+const getAllAccounts = async () => {
+  try {
+    const accounts = await getAll();
+    return accounts;
+  } catch (error) {
+    throw new Error("Error fetching accounts");
+  }
+};
 export const accountService = {
   createAccount,
   loginAccount,
@@ -83,5 +92,6 @@ export const accountService = {
   removeAccount,
   updateAccount,
   forgetPassword,
+  getAllAccounts,
   // more
 };

@@ -79,10 +79,31 @@ const updateResident = async (req, res, next) => {
     });
   }
 };
+const getAllResidents = async (req, res, next) => {
+  try {
+    const residents = await residentService.getAllResidents();
+    if (residents.status) {
+      return res.status(residents.status).json({
+        message: residents.message,
+        error: residents.error,
+      });
+    }
+    res.status(StatusCodes.OK).json({
+      message: "Residents retrieved successfully",
+      residents,
+    });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error retrieving residents",
+      error: error.message,
+    });
+  }
+};
 export const residentController = {
   createResident,
   readResident,
   removeResident,
   updateResident,
+  getAllResidents,
   // more
 };

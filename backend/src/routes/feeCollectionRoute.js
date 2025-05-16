@@ -53,6 +53,52 @@ router.post(
 );
 /**
  * @swagger
+ * /fee-collections/get-all:
+ *   get:
+ *     summary: Get all fee collections
+ *     tags:
+ *       - Fee Collections
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of all fee collections retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "FC12345"
+ *                   Fees:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     example: ["Fee1", "Fee2", "Fee3"]
+ *                   CreateDate:
+ *                     type: string
+ *                     format: date
+ *                     example: "2025-05-15"
+ *                   DueDate:
+ *                     type: string
+ *                     format: date
+ *                     example: "2025-06-15"
+ *       400:
+ *         description: Validation failed
+ *       401:
+ *         description: Unauthorized
+ */
+router.get(
+  "/get-all",
+  authMiddleware,
+  authRoles("accountant"),
+  feeCollectionController.getAllFeeCollections
+);
+/**
+ * @swagger
  * /fee-collections/{id}:
  *   get:
  *     summary: Get a fee collection by ID
@@ -162,4 +208,5 @@ router.put(
   feeCollectionValidation.updateFeeCollection,
   feeCollectionController.updateFeeCollection
 );
+
 export const feeCollectionRoute = router;

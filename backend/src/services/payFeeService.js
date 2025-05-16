@@ -1,4 +1,4 @@
-import { create, read, remove, update } from "../models/payFeeModel.js";
+import { create, read, remove, update, getAll } from "../models/payFeeModel.js";
 import { StatusCodes } from "http-status-codes";
 
 const createPayFee = async (data) => {
@@ -70,9 +70,22 @@ const updatePayFee = async (id, data) => {
     };
   }
 };
+const getAllPayFees = async () => {
+  try {
+    const payFees = await getAll();
+    return payFees;
+  } catch (error) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: "Error fetching pay fees",
+      error: error.message,
+    };
+  }
+};
 export const payFeeService = {
   createPayFee,
   readPayFee,
   removePayFee,
   updatePayFee,
+  getAllPayFees,
 };

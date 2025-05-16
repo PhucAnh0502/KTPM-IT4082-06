@@ -76,4 +76,12 @@ const remove = async (id) => {
     throw new Error("Error deleting fee");
   }
 };
-export { Fee, create, read, update, remove };
+const getAll = async () => {
+  try {
+    const fees = await Fee.find();
+    return fees;
+  } catch (error) {
+    throw new Error("Error fetching fees");
+  }
+};
+export { Fee, create, read, update, remove, getAll };

@@ -1,4 +1,10 @@
-import { create, read, remove, update } from "../models/residentModel.js";
+import {
+  create,
+  read,
+  remove,
+  update,
+  getAll,
+} from "../models/residentModel.js";
 
 const createResident = async (data) => {
   try {
@@ -70,11 +76,30 @@ const updateResident = async (id, data) => {
     };
   }
 };
+const getAllResidents = async () => {
+  try {
+    const residents = await getAll();
+    if (!residents) {
+      return {
+        status: StatusCodes.NOT_FOUND,
+        message: "No residents found",
+      };
+    }
+    return residents;
+  } catch (error) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: "Error fetching residents",
+      error: error.message,
+    };
+  }
+};
 
 export const residentService = {
   createResident,
   readResident,
   removeResident,
   updateResident,
+  getAllResidents,
   // more
 };

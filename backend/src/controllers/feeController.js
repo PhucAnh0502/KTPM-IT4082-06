@@ -74,9 +74,24 @@ const updateFee = async (req, res, next) => {
     });
   }
 };
+const getAllFees = async (req, res, next) => {
+  try {
+    const fees = await feeService.getAllFees();
+    res.status(200).json({
+      message: "Fees retrieved successfully",
+      fees,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error retrieving fees",
+      error: error.message,
+    });
+  }
+};
 export const feeController = {
   createFee,
   readFee,
   removeFee,
   updateFee,
+  getAllFees,
 };

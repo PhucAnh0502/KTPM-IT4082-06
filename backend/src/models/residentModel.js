@@ -93,4 +93,12 @@ const update = async (id, data) => {
     throw new Error("Error updating resident");
   }
 };
-export { Resident, create, read, remove, update };
+const getAll = async () => {
+  try {
+    const residents = await Resident.find();
+    return residents;
+  } catch (error) {
+    throw new Error("Error fetching residents");
+  }
+};
+export { Resident, create, read, remove, update, getAll };
