@@ -81,9 +81,30 @@ const updatePayFee = async (req, res) => {
     });
   }
 };
+const getAllPayFees = async (req, res) => {
+  try {
+    const payFees = await payFeeService.getAllPayFees();
+    if (payFees.status) {
+      return res.status(payFees.status).json({
+        message: payFees.message,
+        error: payFees.error,
+      });
+    }
+    return res.status(StatusCodes.OK).json({
+      message: "Pay fees retrieved successfully",
+      data: payFees,
+    });
+  } catch (error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error retrieving pay fees",
+      error: error.message,
+    });
+  }
+};
 export const payFeeController = {
   createPayFee,
   readPayFee,
   removePayFee,
   updatePayFee,
+  getAllPayFees,
 };

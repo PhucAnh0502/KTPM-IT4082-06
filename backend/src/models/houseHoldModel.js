@@ -77,4 +77,12 @@ const update = async (id, data) => {
     throw new Error("Error updating houseHold");
   }
 };
-export { HouseHold, create, read, remove, update };
+const getAll = async () => {
+  try {
+    const houseHolds = await HouseHold.find();
+    return houseHolds;
+  } catch (error) {
+    throw new Error("Error fetching houseHolds");
+  }
+};
+export { HouseHold, create, read, remove, update, getAll };

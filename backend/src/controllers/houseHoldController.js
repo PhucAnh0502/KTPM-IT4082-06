@@ -81,10 +81,26 @@ const updateHouseHold = async (req, res, next) => {
     });
   }
 };
+const getAllHouseHolds = async (req, res, next) => {
+  try {
+    console.log("getAllHouseHolds");
+    const houseHolds = await houseHoldService.getAllHouseHolds();
+    res.status(StatusCodes.OK).json({
+      message: "Households retrieved successfully",
+      houseHolds,
+    });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error retrieving households  ??",
+      error: error.message,
+    });
+  }
+};
 export const houseHoldController = {
   createHouseHold,
   readHouseHold,
   removeHouseHold,
   updateHouseHold,
+  getAllHouseHolds,
   // more
 };

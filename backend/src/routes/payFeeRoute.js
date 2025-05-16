@@ -48,7 +48,52 @@ router.post(
   payFeeValidation.createPayFee,
   payFeeController.createPayFee
 );
-
+/**
+ * @swagger
+ * /pay-fees/get-alls:
+ *   get:
+ *     summary: Get all payments
+ *     tags:
+ *       - Pay Fees
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of all payments retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "P12345"
+ *                   FeeID:
+ *                     type: string
+ *                     example: "F12345"
+ *                   HouseHoldID:
+ *                     type: string
+ *                     example: "HH12345"
+ *                   Amount:
+ *                     type: number
+ *                     example: 500.75
+ *                   PayDate:
+ *                     type: string
+ *                     format: date
+ *                     example: "2025-05-15"
+ *       400:
+ *         description: Validation failed
+ *       401:
+ *         description: Unauthorized
+ */
+router.get(
+  "/get-alls",
+  authMiddleware,
+  authRoles("accountant"),
+  payFeeController.getAllPayFees
+);
 /**
  * @swagger
  * /pay-fees/{id}:

@@ -70,4 +70,12 @@ const update = async (id, data) => {
     throw new Error("Error updating payFee");
   }
 };
-export { PayFee, create, read, remove, update };
+const getAll = async () => {
+  try {
+    const payFees = await PayFee.find();
+    return payFees;
+  } catch (error) {
+    throw new Error("Error fetching payFees");
+  }
+};
+export { PayFee, create, read, remove, update, getAll };

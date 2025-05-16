@@ -52,7 +52,56 @@ router.post(
   feeValidation.createFee,
   feeController.createFee
 );
-
+/**
+ * @swagger
+ * /fees/get-alls:
+ *   get:
+ *     summary: Get all fees
+ *     tags:
+ *       - Fees
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of all fees retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "F12345"
+ *                   FeeType:
+ *                     type: string
+ *                     enum:
+ *                       - water
+ *                       - electricity
+ *                       - maintenance
+ *                       - other
+ *                     example: water
+ *                   Description:
+ *                     type: string
+ *                     example: "Monthly water bill"
+ *                   feeName:
+ *                     type: string
+ *                     example: "Water Fee"
+ *                   FeeCollectionID:
+ *                     type: string
+ *                     example: "FC12345"
+ *       400:
+ *         description: Validation failed
+ *       401:
+ *         description: Unauthorized
+ */
+router.get(
+  "/get-alls",
+  authMiddleware,
+  authRoles("accountant"),
+  feeController.getAllFees
+);
 /**
  * @swagger
  * /fees/{id}:
@@ -170,4 +219,5 @@ router.put(
   feeValidation.updateFee,
   feeController.updateFee
 );
+
 export const feeRoute = router;

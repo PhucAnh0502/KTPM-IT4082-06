@@ -66,4 +66,12 @@ const update = async (id, data) => {
     throw new Error("Error updating feeCollection");
   }
 };
-export { FeeCollection, create, read, remove, update };
+const getAll = async () => {
+  try {
+    const feeCollections = await FeeCollection.find();
+    return feeCollections;
+  } catch (error) {
+    throw new Error("Error fetching feeCollections");
+  }
+};
+export { FeeCollection, create, read, remove, update, getAll };

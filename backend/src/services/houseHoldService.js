@@ -1,4 +1,10 @@
-import { create, read, remove, update } from "../models/houseHoldModel.js";
+import {
+  create,
+  read,
+  remove,
+  update,
+  getAll,
+} from "../models/houseHoldModel.js";
 
 const createHouseHold = async (data) => {
   try {
@@ -69,10 +75,23 @@ const updateHouseHold = async (id, data) => {
     };
   }
 };
+const getAllHouseHolds = async () => {
+  try {
+    const houseHolds = await getAll();
+    return houseHolds;
+  } catch (error) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: "Error fetching households",
+      error: error.message,
+    };
+  }
+};
 export const houseHoldService = {
   createHouseHold,
   readHouseHold,
   removeHouseHold,
   updateHouseHold,
+  getAllHouseHolds,
   // more
 };

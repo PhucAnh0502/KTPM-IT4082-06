@@ -18,7 +18,25 @@ const createVehicle = async (req, res, next) => {
     });
   }
 };
+const updateVehicle = async (req, res, next) => {
+  const schema = joi.object({
+    LicensePlate: joi.string().optional(),
+    HouseHoldID: joi.string().optional(),
+    VehicleType: joi.string().valid("Car", "Bike", "Truck").optional(),
+  });
+
+  try {
+    await schema.validateAsync(req.body);
+    next();
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json({
+      message: "Validation failed",
+      error: new Error(error).message,
+    });
+  }
+};
 export const vehicleValidation = {
   createVehicle: createVehicle,
+  updateVehicle: updateVehicle,
   // more
 };

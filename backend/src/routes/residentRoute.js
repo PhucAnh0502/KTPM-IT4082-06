@@ -83,6 +83,81 @@ router.post(
   residentValidation.createResident,
   residentController.createResident
 );
+/**
+ * @swagger
+ * /residents/get-alls:
+ *   get:
+ *     summary: Get all residents
+ *     tags:
+ *       - Residents
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of all residents retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "R12345"
+ *                   Name:
+ *                     type: string
+ *                     example: John Doe
+ *                   CID:
+ *                     type: string
+ *                     example: "123456789"
+ *                   DateOfBirth:
+ *                     type: string
+ *                     format: date
+ *                     example: "1990-01-01"
+ *                   Gender:
+ *                     type: string
+ *                     enum:
+ *                       - Male
+ *                       - Female
+ *                       - Other
+ *                     example: Male
+ *                   HouseHoldID:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     example: ["HH123", "HH124"]
+ *                   AccountID:
+ *                     type: string
+ *                     example: "ACC123"
+ *                   Occupation:
+ *                     type: string
+ *                     example: "Engineer"
+ *                   Status:
+ *                     type: string
+ *                     enum:
+ *                       - Temporary
+ *                       - Permanent
+ *                       - Moved
+ *                       - Dead
+ *                     example: Permanent
+ *                   PhoneNumber:
+ *                     type: string
+ *                     example: "0123456789"
+ *                   HouseHoldRelation:
+ *                     type: string
+ *                     example: "Head of Household"
+ *       400:
+ *         description: Validation failed
+ *       401:
+ *         description: Unauthorized
+ */
+router.get(
+  "/get-alls",
+  authMiddleware,
+  authRoles("leader"),
+  residentController.getAllResidents
+);
 
 /**
  * @swagger

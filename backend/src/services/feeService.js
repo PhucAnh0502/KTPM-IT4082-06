@@ -1,4 +1,4 @@
-import { create, read, remove, update } from "../models/feeModel.js";
+import { create, read, remove, update, getAll } from "../models/feeModel.js";
 
 const createFee = async (data) => {
   try {
@@ -69,9 +69,22 @@ const updateFee = async (id, data) => {
     };
   }
 };
+const getAllFees = async () => {
+  try {
+    const fees = await getAll();
+    return fees;
+  } catch (error) {
+    return {
+      status: 500,
+      message: "Error fetching fees",
+      error: error.message,
+    };
+  }
+};
 export const feeService = {
   createFee,
   readFee,
   removeFee,
   updateFee,
+  getAllFees,
 };
