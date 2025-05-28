@@ -48,7 +48,7 @@ const router = Router();
 router.post(
   "/create",
   authMiddleware,
-  authRoles("accountant"),
+  authRoles("accountant", "admin"),
   feeValidation.createFee,
   feeController.createFee
 );
@@ -99,7 +99,7 @@ router.post(
 router.get(
   "/get-alls",
   authMiddleware,
-  authRoles("accountant"),
+  authRoles("accountant", "admin"),
   feeController.getAllFees
 );
 /**
@@ -129,7 +129,7 @@ router.get(
 router.get(
   "/:id",
   authMiddleware,
-  authRoles("accountant"),
+  authRoles("accountant", "admin"),
   feeController.readFee
 );
 
@@ -160,7 +160,7 @@ router.get(
 router.delete(
   "/:id",
   authMiddleware,
-  authRoles("accountant"),
+  authRoles("accountant", "admin"),
   feeController.removeFee
 );
 
@@ -215,7 +215,7 @@ router.delete(
 router.put(
   "/:id",
   authMiddleware,
-  authRoles("accountant"),
+  authRoles("accountant", "admin"),
   feeValidation.updateFee,
   feeController.updateFee
 );

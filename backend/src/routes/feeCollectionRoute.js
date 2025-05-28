@@ -47,7 +47,7 @@ router.get("/", (req, res) => {
 router.post(
   "/create",
   authMiddleware,
-  authRoles("accountant"),
+  authRoles("accountant", "admin"),
   feeCollectionValidation.createFeeCollection,
   feeCollectionController.createFeeCollection
 );
@@ -94,7 +94,7 @@ router.post(
 router.get(
   "/get-all",
   authMiddleware,
-  authRoles("accountant"),
+  authRoles("accountant", "admin"),
   feeCollectionController.getAllFeeCollections
 );
 /**
@@ -124,7 +124,7 @@ router.get(
 router.get(
   "/:id",
   authMiddleware,
-  authRoles("accountant"),
+  authRoles("accountant", "admin"),
   feeCollectionController.readFeeCollection
 );
 /**
@@ -154,7 +154,7 @@ router.get(
 router.delete(
   "/:id",
   authMiddleware,
-  authRoles("accountant"),
+  authRoles("accountant", "admin"),
   feeCollectionController.removeFeeCollection
 );
 /**
@@ -204,7 +204,7 @@ router.delete(
 router.put(
   "/:id",
   authMiddleware,
-  authRoles("accountant"),
+  authRoles("accountant", "admin"),
   feeCollectionValidation.updateFeeCollection,
   feeCollectionController.updateFeeCollection
 );

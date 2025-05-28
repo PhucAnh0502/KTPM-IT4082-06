@@ -52,7 +52,7 @@ router.get("/", (req, res) => {
 router.post(
   "/create",
   authMiddleware,
-  authRoles("leader"),
+  authRoles("leader", "admin"),
   houseHoldValidation.createHouseHold,
   houseHoldController.createHouseHold
 );
@@ -105,7 +105,7 @@ router.post(
 router.get(
   "/get-all",
   authMiddleware,
-  authRoles("leader"),
+  authRoles("leader", "admin"),
   houseHoldController.getAllHouseHolds
 );
 /**
@@ -135,7 +135,7 @@ router.get(
 router.get(
   "/:id",
   authMiddleware,
-  authRoles("leader"),
+  authRoles("leader", "admin"),
   houseHoldController.readHouseHold
 );
 
@@ -166,7 +166,7 @@ router.get(
 router.delete(
   "/:id",
   authMiddleware,
-  authRoles("leader"),
+  authRoles("leader", "admin"),
   houseHoldController.removeHouseHold
 );
 
@@ -223,7 +223,7 @@ router.delete(
 router.put(
   "/:id",
   authMiddleware,
-  authRoles("leader"),
+  authRoles("leader", "admin"),
   houseHoldValidation.updateHouseHold,
   houseHoldController.updateHouseHold
 );

@@ -79,7 +79,7 @@ router.get("/", (req, res) => {
 router.post(
   "/create",
   authMiddleware,
-  authRoles("leader"),
+  authRoles("leader", "admin"),
   residentValidation.createResident,
   residentController.createResident
 );
@@ -155,7 +155,7 @@ router.post(
 router.get(
   "/get-alls",
   authMiddleware,
-  authRoles("leader"),
+  authRoles("leader", "admin"),
   residentController.getAllResidents
 );
 
@@ -186,7 +186,7 @@ router.get(
 router.get(
   "/:id",
   authMiddleware,
-  authRoles("leader"),
+  authRoles("leader", "admin"),
   residentController.readResident
 );
 
@@ -266,7 +266,7 @@ router.get(
 router.put(
   "/:id",
   authMiddleware,
-  authRoles("leader"),
+  authRoles("leader", "admin"),
   residentValidation.updateResident,
   residentController.updateResident
 );
@@ -298,7 +298,7 @@ router.put(
 router.delete(
   "/:id",
   authMiddleware,
-  authRoles("leader"),
+  authRoles("leader", "admin"),
   residentController.removeResident
 );
 export const residentRoute = router;
