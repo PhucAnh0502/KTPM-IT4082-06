@@ -24,7 +24,7 @@ function RegisterPage() {
     
     setLoading(true);
     try {
-      const response = await registerUser({ Email: email, Password: password, Role: role });
+      const response = await register({ Email: email, Password: password, Role: role });
       setSuccessMessage(response.message || 'Registration successful! You can now log in.');
       // Clear form fields after successful registration
       setEmail('');
