@@ -1,35 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-const LoginPage = () => {
+const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const { resetPassword } = useAuth();
   const navigate = useNavigate();
-  const { login, userRole, isAuthenticated } = useAuth();
-
-  // Watch for authentication changes
-  useEffect(() => {
-    if (isAuthenticated && userRole) {
-      navigate(`/${userRole}-dashboard`);
-    }
-  }, [isAuthenticated, userRole, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setMessage('');
     setLoading(true);
 
     try {
-      const result = await login(email, password);
-      if (!result.success) {
-        setError(result.error);
+      const result = await resetPassword(email, newPassword, confirmPassword);
+      
+      if (result.success) {
+        setMessage('Đặt lại mật khẩu thành công!');
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+      } else {
+        setError(result.error || 'Đặt lại mật khẩu thất bại. Vui lòng kiểm tra lại thông tin.');
       }
     } catch (err) {
-      setError('An error occurred during login. Please try again.');
-      console.error('Login error:', err);
+      setError('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+      console.error('Reset password error:', err);
     } finally {
       setLoading(false);
     }
@@ -40,67 +42,70 @@ const LoginPage = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+            Đặt lại mật khẩu
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link
-              to="/register"
-              className="font-medium text-blue-600 hover:text-blue-500"
-            >
-              create a new account
-            </Link>
+            Vui lòng nhập email và mật khẩu của bạn
           </p>
         </div>
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded relative">
               {error}
             </div>
           )}
+          {message && (
+            <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded relative">
+              {message}
+            </div>
+          )}
+          
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="email" className="sr-only">
-                Email address
+                Email
               </label>
               <input
                 id="email"
                 name="email"
                 type="email"
-                autoComplete="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                placeholder="Email"
               />
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">
-                Password
+              <label htmlFor="new-password" className="sr-only">
+                Mật khẩu mới
               </label>
               <input
-                id="password"
-                name="password"
+                id="new-password"
+                name="new-password"
                 type="password"
-                autoComplete="current-password"
                 required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Mật khẩu mới"
               />
             </div>
-          </div>
-
-          <div className="flex items-center justify-end">
-            <div className="text-sm">
-              <Link
-                to="/forgot-password"
-                className="font-medium text-blue-600 hover:text-blue-500"
-              >
-                Quên mật khẩu?
-              </Link>
+            <div>
+              <label htmlFor="confirm-password" className="sr-only">
+                Nhập lại mật khẩu mới
+              </label>
+              <input
+                id="confirm-password"
+                name="confirm-password"
+                type="password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Nhập lại mật khẩu mới"
+              />
             </div>
           </div>
 
@@ -134,9 +139,18 @@ const LoginPage = () => {
                   </svg>
                 </span>
               ) : (
-                'Sign in'
+                'Đặt lại mật khẩu'
               )}
             </button>
+          </div>
+
+          <div className="text-center">
+            <Link
+              to="/login"
+              className="font-medium text-blue-600 hover:text-blue-500"
+            >
+              Quay lại đăng nhập
+            </Link>
           </div>
         </form>
       </div>
@@ -144,4 +158,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage; 
+export default ForgotPasswordPage; 
