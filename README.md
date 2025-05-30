@@ -19,3 +19,11 @@ npm run dev
 - MongoDB WebUI: http://127.0.0.1:8081/
 - Credential: root - password
 ```
+
+### FRONTEND
+
+```sh
+cd frontend
+npm install
+npm run dev
+
