@@ -10,6 +10,8 @@ import RoleBaseRoutes from './routes/RoleBaseRoutes';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminSummary from './components/admin/AdminSummary';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import AccountantDashboard from './pages/AccountantDashboard';
+import FeesList from './components/accountant/FeeList';
 // Placeholder pages
 const NotFoundPage = () => <div className="p-4 text-center"><h2 className="text-2xl font-bold">404 - Page Not Found</h2><p>The page you are looking for does not exist.</p></div>;
 
@@ -88,6 +90,15 @@ function App() {
               </PrivateRoutes>
             }>
               <Route index element={<AdminSummary />} />
+            </Route>
+            <Route path="/accountant-dashboard" element={
+              <PrivateRoutes>
+                <RoleBaseRoutes allowedRoles={['accountant']}>
+                  <AccountantDashboard />
+                </RoleBaseRoutes>
+              </PrivateRoutes>
+            }>
+              <Route path='payments' element={<FeesList/>} />
             </Route>
             <Route path="*" element={<NotFoundPage onClose = {() => window.history.back()} />} />
           </Routes>
