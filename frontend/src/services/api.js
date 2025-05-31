@@ -9,6 +9,14 @@ const api = axios.create({
   },
 });
 
+// Create a separate instance for unauthenticated requests
+const publicApi = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 // Add a request interceptor to add the auth token to requests
 api.interceptors.request.use(
   (config) => {
@@ -30,7 +38,7 @@ export const accountApi = {
   changePassword: (data) => api.post('/accounts/change-password', data),
   updateAccount: (id, data) => api.put(`/accounts/${id}`, data),
   deleteAccount: (id) => api.delete(`/accounts/${id}`),
-  resetPassword: (data) => api.post('/accounts/forget-password', data),
+  resetPassword: (data) => publicApi.post('/accounts/forget-password', data),
   getAllAccounts: () => api.get('/accounts/get-all'),
 };
 

@@ -9,6 +9,7 @@ import PrivateRoutes from './routes/PrivateRoutes';
 import RoleBaseRoutes from './routes/RoleBaseRoutes';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminSummary from './components/admin/AdminSummary';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 // Placeholder pages
 const NotFoundPage = () => <div className="p-4 text-center"><h2 className="text-2xl font-bold">404 - Page Not Found</h2><p>The page you are looking for does not exist.</p></div>;
 
@@ -70,6 +71,11 @@ function App() {
             <Route path="/register" element={
               <PublicRoute>
                 <RegisterPage onClose={() => window.history.back()} />
+              </PublicRoute>
+            } />
+            <Route path="/forgot-password" element={
+              <PublicRoute>
+                <ForgotPasswordPage />
               </PublicRoute>
             } />
 

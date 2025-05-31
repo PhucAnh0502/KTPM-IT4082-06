@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { login as authLogin, register as authRegister } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
-
+import { resetPassword } from '../services/accountService';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
@@ -30,7 +30,6 @@ export const AuthProvider = ({ children }) => {
       if (payload) {
         setUserRole(payload.role);
         setIsAuthenticated(true);
-        console.log('User role:', payload.role);
       } else {
         handleLogout();
       }
@@ -57,10 +56,9 @@ export const AuthProvider = ({ children }) => {
         throw new Error('Invalid token received');
       }
     } catch (error) {
-      console.error('Login error:', error);
       return {
         success: false,
-        error: error.response?.data?.message || 'Login failed',
+        error: error.response?.data?.error || 'Login failed',
       };
     }
   };
@@ -74,10 +72,9 @@ export const AuthProvider = ({ children }) => {
       });
       return { success: true };
     } catch (error) {
-      console.error('Registration error:', error);
       return {
         success: false,
-        error: error.response?.data?.message || 'Registration failed',
+        error: error.response?.data?.error || 'Registration failed',
       };
     }
   };
@@ -99,6 +96,24 @@ export const AuthProvider = ({ children }) => {
     navigate('/');
   };
 
+  const handleResetPassword = async (email, newPassword, confirmPassword) => {
+    try {
+      await resetPassword({
+        Email: email,
+        newPassword,
+        confirmPassword
+      });
+      // If we get here, the request was successful
+      return { success: true };
+    } catch (error) {
+      console.error('Reset password error:', error);
+      return {
+        success: false,
+        error: error.response?.data?.error || 'Reset password failed',
+      };
+    }
+  };
+
   const value = {
     isAuthenticated,
     userRole,
@@ -106,6 +121,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout: handleLogout,
+    resetPassword: handleResetPassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
