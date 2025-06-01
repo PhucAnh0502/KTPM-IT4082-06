@@ -24,7 +24,6 @@ const Header = () => {
           ) : (
             <>
               <Link to="/login" className="hover:text-blue-200">Login</Link>
-              <Link to="/register" className="hover:text-blue-200">Register</Link>
             </>
           )}
         </div>
