@@ -12,6 +12,10 @@ const feeCollectionSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  Name: {
+    type: String,
+    required: true,
+  },
   CreateDate: {
     type: Date,
     default: Date.now,

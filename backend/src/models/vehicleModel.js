@@ -14,7 +14,7 @@ const vehicleSchema = new mongoose.Schema(
     HouseHoldID: {
       type: String,
       ref: "HouseHold", // Tham chiếu đến HouseHold
-      required: true,
+      // required: true,
     },
     VehicleType: {
       type: String,

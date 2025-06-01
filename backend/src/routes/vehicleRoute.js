@@ -49,7 +49,7 @@ router.post(
   "/create",
   authMiddleware,
   authRoles("admin", "leader"),
-  vehicleValidation.createVehicle,
+  // vehicleValidation.createVehicle,
   vehicleController.createVehicle
 );
 /**

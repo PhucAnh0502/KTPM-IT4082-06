@@ -23,12 +23,11 @@ const houseHoldSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    VehicleID: [
-      {
-        type: String,
-        ref: "Vehicle",
-      },
-    ],
+    VehicleID: {
+      type: [String],
+      ref: "Vehicle",
+      required: false,
+    },
   },
   { timestamps: true }
 );
