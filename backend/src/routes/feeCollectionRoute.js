@@ -25,6 +25,9 @@ router.get("/", (req, res) => {
  *           schema:
  *             type: object
  *             properties:
+ *               Name:
+ *                 type: string
+ *                 example: "Semester 2 Fees"
  *               Fees:
  *                 type: array
  *                 items:
@@ -48,7 +51,7 @@ router.post(
   "/create",
   authMiddleware,
   authRoles("accountant", "admin"),
-  feeCollectionValidation.createFeeCollection,
+  // feeCollectionValidation.createFeeCollection,
   feeCollectionController.createFeeCollection
 );
 /**

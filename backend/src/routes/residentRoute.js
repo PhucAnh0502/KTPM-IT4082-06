@@ -50,9 +50,6 @@ router.get("/", (req, res) => {
  *                 items:
  *                   type: string
  *                 example: ["HH123", "HH124"]
- *               AccountID:
- *                 type: string
- *                 example: "ACC123"
  *               Occupation:
  *                 type: string
  *                 example: "Engineer"
@@ -80,7 +77,7 @@ router.post(
   "/create",
   authMiddleware,
   authRoles("leader", "admin"),
-  residentValidation.createResident,
+  // residentValidation.createResident,
   residentController.createResident
 );
 /**
