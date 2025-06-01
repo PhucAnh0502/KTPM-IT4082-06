@@ -8,7 +8,6 @@ const HomePage = () => {
       <p className="text-xl text-gray-600 mb-10">Xin chào! Vui lòng đăng nhập hoặc đăng ký để truy cập vào trang quản lý của bạn.</p>
       <div className="space-x-4">
         <Link to="/login" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition duration-150 ease-in-out text-lg">Đăng nhập</Link>
-        <Link to="/register" className="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition duration-150 ease-in-out text-lg">Đăng ký</Link>
       </div>
     </div>
   );
