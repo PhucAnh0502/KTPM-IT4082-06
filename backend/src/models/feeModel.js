@@ -10,8 +10,19 @@ const feeSchema = new mongoose.Schema(
     },
     FeeType: {
       type: String,
-      enum: ["water", "electricity", "maintenance", "other"], // Ví dụ các giá trị enum
-      default: "other", // Giá trị mặc định
+      enum: [
+        "service", // Phí dịch vụ chung cư
+        "management", // Phí quản lý chung cư
+        "water", // Phí nước
+        "electricity", // Phí điện
+        "maintenance", // Phí bảo trì
+        "internet", // Phí internet
+        "vehicle_fee", // Phí gửi xe (gộp chung xe máy & ô tô)
+        "sanitation", // Phí vệ sinh
+        "donation", // Khoản đóng góp tự nguyện
+        "other", // Khác
+      ],
+      default: "other",
       required: true,
     },
     Description: {
@@ -26,6 +37,13 @@ const feeSchema = new mongoose.Schema(
       type: String,
       ref: "FeeCollection", // Tham chiếu đến FeeCollection
       required: true,
+    },
+    DonationCampaign: {
+      type: String,
+      required: function () {
+        return this.FeeType === "donation";
+      },
+      // Ví dụ: "Ủng hộ ngày thương binh- liệt sỹ 27/07"
     },
   },
   { timestamps: true }

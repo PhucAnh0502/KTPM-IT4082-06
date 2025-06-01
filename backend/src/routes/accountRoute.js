@@ -52,7 +52,7 @@ router.get("/", (req, res) => {
  */
 router.post(
   "/login",
-  accountValidation.loginAccount,
+  // accountValidation.loginAccount,
   accountController.loginAccount
 );
 /**
