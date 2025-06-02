@@ -94,7 +94,7 @@ router.post(
 router.get(
   "/get-all",
   authMiddleware,
-  authRoles("accountant", "admin"),
+  authRoles("accountant", "admin", "leader"),
   feeCollectionController.getAllFeeCollections
 );
 /**
@@ -124,7 +124,7 @@ router.get(
 router.get(
   "/:id",
   authMiddleware,
-  authRoles("accountant", "admin"),
+  authRoles("accountant", "admin", "leader"),
   feeCollectionController.readFeeCollection
 );
 /**

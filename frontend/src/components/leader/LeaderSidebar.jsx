@@ -12,9 +12,10 @@ import {
   FaMoneyBillWave,
   FaHome,
   FaUserShield,
+  FaListUl
 } from "react-icons/fa";
 
-const Sidebar = () => {
+const LeaderSidebar = () => {
   const role = localStorage.getItem("accountRole")?.toLowerCase() || "resident";
 
   const getMenuItems = () => {
@@ -25,12 +26,6 @@ const Sidebar = () => {
         label: "Dashboard",
         roles: ["admin", "leader", "resident", "accountant"]
       },
-     /* {
-        path: `/${role}-dashboard/profile`,
-        icon: <FaUserShield className="text-xl" />,
-        label: "Profile",
-        roles: ["admin", "leader", "resident", "accountant"]
-      } */
     ];
 
     const roleSpecificItems = [
@@ -42,10 +37,10 @@ const Sidebar = () => {
         roles: ["admin"]
       },
       {
-        path: `/${role}-dashboard/rooms`,
+        path: `/${role}-dashboard/households`,
         icon: <FaBuilding className="text-xl" />,
-        label: "HouseHold",
-        roles: ["admin"," leader"]
+        label: "Household",
+        roles: ["admin", "leader"]
       },
       {
         path: `/${role}-dashboard/maintenance`,
@@ -54,12 +49,7 @@ const Sidebar = () => {
         roles: ["admin", "leader"]
       },
       // Leader specific items
-      {
-        path: `/${role}-dashboard/residents`,
-        icon: <FaUsers className="text-xl" />,
-        label: "Residents",
-        roles: ["leader"]
-      },
+      
       // Accountant specific items
       {
         path: `/${role}-dashboard/payments`,
@@ -75,7 +65,7 @@ const Sidebar = () => {
       },
     ];
 
-    return [...commonItems, ...roleSpecificItems].filter(item => 
+    return [...commonItems, ...roleSpecificItems].filter(item =>
       item.roles.includes(role)
     );
   };
@@ -108,4 +98,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default LeaderSidebar;

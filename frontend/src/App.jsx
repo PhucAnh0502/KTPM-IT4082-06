@@ -11,7 +11,9 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminSummary from './components/admin/AdminSummary';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import AccountantDashboard from './pages/AccountantDashboard';
+import LeaderDashboard from './pages/leader/LeaderDashboard';
 import FeesList from './components/accountant/FeeList';
+import HouseholdResidentPage from './pages/leader/LeaderHouseholdResidentPage';
 // Placeholder pages
 const NotFoundPage = () => <div className="p-4 text-center"><h2 className="text-2xl font-bold">404 - Page Not Found</h2><p>The page you are looking for does not exist.</p></div>;
 
@@ -30,6 +32,8 @@ const PublicRoute = ({ children }) => {
 
 // Helper function to get dashboard path
 const getDashboardPath = (role) => {
+  console.log('getDashboardPath called with role:', role); 
+
   switch (role) {
     case 'admin':
       return '/admin-dashboard';
@@ -82,26 +86,47 @@ function App() {
             } />
 
             {/* Admin Routes */}
-            <Route path="/admin-dashboard" element={
+          <Route path="/admin-dashboard" element={
+            <PrivateRoutes>
+              <RoleBaseRoutes allowedRoles={['admin']}>
+                <AdminDashboard />
+              </RoleBaseRoutes>
+            </PrivateRoutes>
+          }>
+            <Route index element={<AdminSummary />} />
+            {/* Add other admin sub-routes here */}
+          </Route>
+
+          {/* Accountant Routes */}
+          <Route path="/accountant-dashboard" element={
+            <PrivateRoutes>
+              <RoleBaseRoutes allowedRoles={['accountant']}>
+                <AccountantDashboard />
+              </RoleBaseRoutes>
+            </PrivateRoutes>
+          }>
+            <Route path='fees' element={<FeesList />} /> 
+          </Route>
+
+          {/* Leader Routes */}
+          <Route path="/leader-dashboard" element={
+            <PrivateRoutes>
+              <RoleBaseRoutes allowedRoles={['leader']}>
+                <LeaderDashboard />
+              </RoleBaseRoutes>
+            </PrivateRoutes>
+          }>
+            <Route path="households" element={
               <PrivateRoutes>
-                <RoleBaseRoutes allowedRoles={['admin']}>
-                  <AdminDashboard />
+                <RoleBaseRoutes allowedRoles={['leader']}>
+                  <HouseholdResidentPage />
                 </RoleBaseRoutes>
               </PrivateRoutes>
-            }>
-              <Route index element={<AdminSummary />} />
-            </Route>
-            <Route path="/accountant-dashboard" element={
-              <PrivateRoutes>
-                <RoleBaseRoutes allowedRoles={['accountant']}>
-                  <AccountantDashboard />
-                </RoleBaseRoutes>
-              </PrivateRoutes>
-            }>
-              <Route path='payments' element={<FeesList/>} />
-            </Route>
-            <Route path="*" element={<NotFoundPage onClose = {() => window.history.back()} />} />
-          </Routes>
+            } />
+          </Route>
+
+          <Route path="*" element={<NotFoundPage onClose = {() => window.history.back()} />} />
+        </Routes>
       </main>
       <footer className="bg-gray-800 text-white text-center p-4 mt-auto">
         <p>&copy; {new Date().getFullYear()} Management App. All rights reserved.</p>
@@ -110,4 +135,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
