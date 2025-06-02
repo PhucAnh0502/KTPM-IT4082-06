@@ -25,12 +25,6 @@ const router = Router();
  *               FeeID:
  *                 type: string
  *                 example: "F12345"
- *               HouseHoldID:
- *                 type: string
- *                 example: "HH12345"
- *               Amount:
- *                 type: number
- *                 example: 500.75
  *               PayDate:
  *                 type: string
  *                 format: date
@@ -45,7 +39,7 @@ router.post(
   "/create",
   authMiddleware,
   authRoles("accountant", "admin"),
-  payFeeValidation.createPayFee,
+  // payFeeValidation.createPayFee,
   payFeeController.createPayFee
 );
 /**

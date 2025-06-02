@@ -49,7 +49,7 @@ router.post(
   "/create",
   authMiddleware,
   authRoles("accountant", "admin"),
-  feeValidation.createFee,
+  // feeValidation.createFee,
   feeController.createFee
 );
 /**

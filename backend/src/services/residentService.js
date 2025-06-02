@@ -5,11 +5,19 @@ import {
   update,
   getAll,
 } from "../models/residentModel.js";
-
+import { create as createAccount } from "../models/accountModel.js";
 const createResident = async (data) => {
   try {
+    const name = data.Name.replace(/\s+/g, "");
+    const newAccount = {
+      Email: `${name}@bluemoon.com`,
+      Password: 123456,
+      Role: data.Role || "resident", // Default role is 'resident'
+    };
+    const account = await createAccount(newAccount);
     const newResident = {
       ...data,
+      AccountID: account._id, // Link the resident to the account
     };
     const createdResident = await create(newResident);
     console.log("createdResident : ", createdResident);

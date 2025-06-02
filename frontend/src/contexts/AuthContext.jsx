@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }) => {
       }).join(''));
       return JSON.parse(jsonPayload);
     } catch (error) {
-      console.error('Error parsing token:', error);
       return null;
     }
   };
@@ -46,7 +45,6 @@ export const AuthProvider = ({ children }) => {
       const payload = parseToken(token);
       
       if (payload) {
-        // Store role from token payload
         const role = payload.role;
         localStorage.setItem('accountRole', role);
         setUserRole(role);
@@ -80,19 +78,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const handleLogout = () => {
-    // Clear all authentication related items from localStorage
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('accountRole');
-    // Clear any other potential auth-related items
     localStorage.removeItem('userRole');
     localStorage.removeItem('userData');
     
-    // Reset all auth states
     setIsAuthenticated(false);
     setUserRole(null);
     
-    // Back to home page
     navigate('/');
   };
 
@@ -103,10 +97,8 @@ export const AuthProvider = ({ children }) => {
         newPassword,
         confirmPassword
       });
-      // If we get here, the request was successful
       return { success: true };
     } catch (error) {
-      console.error('Reset password error:', error);
       return {
         success: false,
         error: error.response?.data?.error || 'Reset password failed',

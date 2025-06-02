@@ -1,34 +1,36 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import Header from './components/home/Header';
 import { useAuth } from './contexts/AuthContext';
 import PrivateRoutes from './routes/PrivateRoutes';
 import RoleBaseRoutes from './routes/RoleBaseRoutes';
+import PublicRoute from './routes/PublicRoutes';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminSummary from './components/admin/AdminSummary';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import UserList from './components/admin/user/UserList';
+import FeeLists from './components/admin/fee/FeeLists';
+import CreateFee from './components/admin/fee/CreateFee';
+import FeeCollectionList from './components/admin/feeCollection/FeeCollectionList';
+import CreateFeeCollection from './components/admin/feeCollection/CreateFeeCollection';
+import UpdateFeeCollection from './components/admin/feeCollection/UpdateFeeCollection';
+import UpdateFee from './components/admin/fee/UpdateFee';
+import HouseholdList from './components/admin/household/HouseholdList';
+import CreateHousehold from './components/admin/household/CreateHousehold';
+import UpdateHouseHold from './components/admin/household/UpdateHouseHold';
+import ResidentList from './components/admin/resident/ResidentList'; 
+import CreateResident from './components/admin/resident/CreateResident';
+import UpdateResident from './components/admin/resident/UpdateResident';
 import AccountantDashboard from './pages/AccountantDashboard';
 import LeaderDashboard from './pages/leader/LeaderDashboard';
 import FeesList from './components/accountant/FeeList';
 import HouseholdResidentPage from './pages/leader/LeaderHouseholdResidentPage';
+
 // Placeholder pages
 const NotFoundPage = () => <div className="p-4 text-center"><h2 className="text-2xl font-bold">404 - Page Not Found</h2><p>The page you are looking for does not exist.</p></div>;
 
-// Public Route Component
-const PublicRoute = ({ children }) => {
-  const { isAuthenticated, userRole } = useAuth();
-  const location = useLocation();
-
-  if (isAuthenticated) {
-    const dashboardPath = getDashboardPath(userRole);
-    return <Navigate to={dashboardPath} state={{ from: location }} replace />;
-  }
-
-  return children;
-};
 
 // Helper function to get dashboard path
 const getDashboardPath = (role) => {
@@ -64,36 +66,55 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <main className="fixed top-0 left-0 w-full z-30">
+      <div className="fixed top-0 left-0 right-0 z-50">
         <Header />
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={
-              <PublicRoute>
-                <LoginPage onClose={() => window.history.back()} />
-              </PublicRoute>
-            } />
-            <Route path="/register" element={
-              <PublicRoute>
-                <RegisterPage onClose={() => window.history.back()} />
-              </PublicRoute>
-            } />
-            <Route path="/forgot-password" element={
-              <PublicRoute>
-                <ForgotPasswordPage />
-              </PublicRoute>
-            } />
+      </div>
+      <div className="flex-1 pt-16">
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={
+            <>
+              <HomePage />
+              <footer className="bg-gray-800 text-white text-center p-4 mt-auto">
+                <p>&copy; {new Date().getFullYear()} Management App. All rights reserved.</p>
+              </footer>
+            </>
+          } />
+          <Route path="/login" element={
+            <PublicRoute>
+              <LoginPage onClose={() => window.history.back()} />
+            </PublicRoute>
+          } />
+          <Route path="/forgot-password" element={
+            <PublicRoute>
+              <ForgotPasswordPage />
+            </PublicRoute>
+          } />
 
-            {/* Admin Routes */}
+          {/* Admin Routes */}
           <Route path="/admin-dashboard" element={
             <PrivateRoutes>
               <RoleBaseRoutes allowedRoles={['admin']}>
-                <AdminDashboard />
+                <div className="min-h-[calc(100vh-4rem)]">
+                  <AdminDashboard />
+                </div>
               </RoleBaseRoutes>
             </PrivateRoutes>
           }>
             <Route index element={<AdminSummary />} />
+            <Route path = "/admin-dashboard/users" element = {<UserList />} />
+            <Route path = "/admin-dashboard/fees" element = {<FeeLists />} />
+            <Route path = "/admin-dashboard/fees/create" element = {<CreateFee />} />
+            <Route path = "/admin-dashboard/fees/edit/:id" element = {<UpdateFee />} />
+            <Route path = "/admin-dashboard/fee-collections" element = {<FeeCollectionList />} />
+            <Route path = "/admin-dashboard/fee-collections/create" element = {<CreateFeeCollection />} />
+            <Route path = "/admin-dashboard/fee-collections/edit/:id" element = {<UpdateFeeCollection />} />
+            <Route path = "/admin-dashboard/households" element = {<HouseholdList />} />
+            <Route path = "/admin-dashboard/households/create" element = {<CreateHousehold />} />
+            <Route path = "/admin-dashboard/households/edit/:id" element = {<UpdateHouseHold />} />
+            <Route path = "/admin-dashboard/residents" element = {<ResidentList />} />
+            <Route path = "/admin-dashboard/residents/create" element = {<CreateResident />} />
+            <Route path = "/admin-dashboard/residents/edit/:id" element = {<UpdateResident />} />
             {/* Add other admin sub-routes here */}
           </Route>
 
@@ -127,6 +148,8 @@ function App() {
 
           <Route path="*" element={<NotFoundPage onClose = {() => window.history.back()} />} />
         </Routes>
+      </div>
+
       </main>
       <footer className="bg-gray-800 text-white text-center p-4 mt-auto">
         <p>&copy; {new Date().getFullYear()} Management App. All rights reserved.</p>
