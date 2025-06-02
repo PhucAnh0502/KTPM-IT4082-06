@@ -23,12 +23,19 @@ import UpdateHouseHold from './components/admin/household/UpdateHouseHold';
 import ResidentList from './components/admin/resident/ResidentList'; 
 import CreateResident from './components/admin/resident/CreateResident';
 import UpdateResident from './components/admin/resident/UpdateResident';
+import AccountantDashboard from './pages/AccountantDashboard';
+import LeaderDashboard from './pages/leader/LeaderDashboard';
+import FeesList from './components/accountant/FeeList';
+import HouseholdResidentPage from './pages/leader/LeaderHouseholdResidentPage';
+
 // Placeholder pages
 const NotFoundPage = () => <div className="p-4 text-center"><h2 className="text-2xl font-bold">404 - Page Not Found</h2><p>The page you are looking for does not exist.</p></div>;
 
 
 // Helper function to get dashboard path
 const getDashboardPath = (role) => {
+  console.log('getDashboardPath called with role:', role); 
+
   switch (role) {
     case 'admin':
       return '/admin-dashboard';
@@ -108,13 +115,47 @@ function App() {
             <Route path = "/admin-dashboard/residents" element = {<ResidentList />} />
             <Route path = "/admin-dashboard/residents/create" element = {<CreateResident />} />
             <Route path = "/admin-dashboard/residents/edit/:id" element = {<UpdateResident />} />
+            {/* Add other admin sub-routes here */}
+          </Route>
+
+          {/* Accountant Routes */}
+          <Route path="/accountant-dashboard" element={
+            <PrivateRoutes>
+              <RoleBaseRoutes allowedRoles={['accountant']}>
+                <AccountantDashboard />
+              </RoleBaseRoutes>
+            </PrivateRoutes>
+          }>
+            <Route path='fees' element={<FeesList />} /> 
+          </Route>
+
+          {/* Leader Routes */}
+          <Route path="/leader-dashboard" element={
+            <PrivateRoutes>
+              <RoleBaseRoutes allowedRoles={['leader']}>
+                <LeaderDashboard />
+              </RoleBaseRoutes>
+            </PrivateRoutes>
+          }>
+            <Route path="households" element={
+              <PrivateRoutes>
+                <RoleBaseRoutes allowedRoles={['leader']}>
+                  <HouseholdResidentPage />
+                </RoleBaseRoutes>
+              </PrivateRoutes>
+            } />
           </Route>
 
           <Route path="*" element={<NotFoundPage onClose = {() => window.history.back()} />} />
         </Routes>
       </div>
+
+      </main>
+      <footer className="bg-gray-800 text-white text-center p-4 mt-auto">
+        <p>&copy; {new Date().getFullYear()} Management App. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
 
-export default App; 
+export default App;

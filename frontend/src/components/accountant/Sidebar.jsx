@@ -5,7 +5,6 @@ import {
   FaCalendarCheck,
   FaCog,
   FaDumbbell,
-  FaFileInvoiceDollar,
   FaFileAlt,
   FaTachometerAlt,
   FaUsers,
@@ -27,52 +26,69 @@ const Sidebar = () => {
         roles: ["admin", "leader", "resident", "accountant"]
       },
       {
-        path: `/${role}-dashboard/users`,
+        path: `/${role}-dashboard/profile`,
         icon: <FaUserShield className="text-xl" />,
+        label: "Profile",
+        roles: ["admin", "leader", "resident", "accountant"]
+      }
+    ];
+
+    const roleSpecificItems = [
+      // Admin specific items
+      {
+        path: `/${role}-dashboard/users`,
+        icon: <FaUsers className="text-xl" />,
         label: "Users Management",
         roles: ["admin"]
       },
       {
-
-        path: `/${role}-dashboard/fees`,
-        icon: <FaMoneyBillWave className="text-xl" />,
-        label: "Fee Management",
-        roles: ["admin"]
-      },
-      {
-        path: `/${role}-dashboard/fee-collections`,
-        icon: <FaFileInvoiceDollar className="text-xl" />,
-        label: "Fee Collections",
-        roles: ["admin", "leader"]
-      },
-      {
-        path: `/${role}-dashboard/households`,
+        path: `/${role}-dashboard/rooms`,
         icon: <FaBuilding className="text-xl" />,
-        label: "Household",
+        label: "Rooms",
         roles: ["admin", "leader"]
       },
+      {
+        path: `/${role}-dashboard/maintenance`,
+        icon: <FaCog className="text-xl" />,
+        label: "Maintenance",
+        roles: ["admin", "leader"]
+      },
+      // Leader specific items
       {
         path: `/${role}-dashboard/residents`,
         icon: <FaUsers className="text-xl" />,
         label: "Residents",
-        roles: ["admin"]
+        roles: ["leader"]
       },
       // Accountant specific items
       {
         path: `/${role}-dashboard/payments`,
         icon: <FaMoneyBillWave className="text-xl" />,
         label: "Payments",
-        roles: ["accountant", "leader"]
+        roles: ["accountant"]
       },
       {
         path: `/${role}-dashboard/reports`,
         icon: <FaFileAlt className="text-xl" />,
         label: "Financial Reports",
-        roles: ["accountant", "leader"]
+        roles: ["accountant"]
       },
+      // Resident specific items
+      {
+        path: `/${role}-dashboard/my-room`,
+        icon: <FaHome className="text-xl" />,
+        label: "My Room",
+        roles: ["resident"]
+      },
+      {
+        path: `/${role}-dashboard/payment-history`,
+        icon: <FaMoneyBillWave className="text-xl" />,
+        label: "Payment History",
+        roles: ["resident"]
+      }
     ];
 
-    return [...commonItems].filter(item => 
+    return [...commonItems, ...roleSpecificItems].filter(item => 
       item.roles.includes(role)
     );
   };

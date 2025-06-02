@@ -5,7 +5,6 @@ import {
   FaCalendarCheck,
   FaCog,
   FaDumbbell,
-  FaFileInvoiceDollar,
   FaFileAlt,
   FaTachometerAlt,
   FaUsers,
@@ -13,9 +12,10 @@ import {
   FaMoneyBillWave,
   FaHome,
   FaUserShield,
+  FaListUl
 } from "react-icons/fa";
 
-const Sidebar = () => {
+const LeaderSidebar = () => {
   const role = localStorage.getItem("accountRole")?.toLowerCase() || "resident";
 
   const getMenuItems = () => {
@@ -26,24 +26,15 @@ const Sidebar = () => {
         label: "Dashboard",
         roles: ["admin", "leader", "resident", "accountant"]
       },
+    ];
+
+    const roleSpecificItems = [
+      // Admin specific items
       {
         path: `/${role}-dashboard/users`,
-        icon: <FaUserShield className="text-xl" />,
+        icon: <FaUsers className="text-xl" />,
         label: "Users Management",
         roles: ["admin"]
-      },
-      {
-
-        path: `/${role}-dashboard/fees`,
-        icon: <FaMoneyBillWave className="text-xl" />,
-        label: "Fee Management",
-        roles: ["admin"]
-      },
-      {
-        path: `/${role}-dashboard/fee-collections`,
-        icon: <FaFileInvoiceDollar className="text-xl" />,
-        label: "Fee Collections",
-        roles: ["admin", "leader"]
       },
       {
         path: `/${role}-dashboard/households`,
@@ -52,11 +43,13 @@ const Sidebar = () => {
         roles: ["admin", "leader"]
       },
       {
-        path: `/${role}-dashboard/residents`,
-        icon: <FaUsers className="text-xl" />,
-        label: "Residents",
-        roles: ["admin"]
+        path: `/${role}-dashboard/maintenance`,
+        icon: <FaCog className="text-xl" />,
+        label: "Maintenance",
+        roles: ["admin", "leader"]
       },
+      // Leader specific items
+      
       // Accountant specific items
       {
         path: `/${role}-dashboard/payments`,
@@ -72,7 +65,7 @@ const Sidebar = () => {
       },
     ];
 
-    return [...commonItems].filter(item => 
+    return [...commonItems, ...roleSpecificItems].filter(item =>
       item.roles.includes(role)
     );
   };
@@ -105,4 +98,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default LeaderSidebar;
