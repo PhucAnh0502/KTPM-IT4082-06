@@ -37,12 +37,28 @@ const FeeCollectionList = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        try {
-            await deleteFeeCollection(id);
-            setCollections(collections.filter((collection) => collection._id !== id));
-            setAlert({ type: 'success', message: 'Xóa đợt thu phí thành công!' });
-        } catch (error) {
-            setAlert({ type: 'error', message: error.response?.data?.error || 'Xóa đợt thu phí thất bại!' });
+        if (window.confirm('Are you sure you want to delete this fee collection? Related fees will be affected.')) {
+            try {
+                // Get collection info before deleting
+                const collectionToDelete = collections.find(c => c._id === id);
+                
+                // Delete collection
+                await deleteFeeCollection(id);
+                
+                // Update state
+                setCollections(collections.filter((collection) => collection._id !== id));
+                
+                // Show success message
+                setAlert({ 
+                    type: 'success', 
+                    message: `Fee collection "${collectionToDelete?.Name}" has been deleted and related fees have been updated!` 
+                });
+            } catch (error) {
+                setAlert({ 
+                    type: 'error', 
+                    message: error.response?.data?.error || 'Failed to delete fee collection!' 
+                });
+            }
         }
     };
 
@@ -83,35 +99,37 @@ const FeeCollectionList = () => {
             )}
 
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">Quản lý đợt thu phí</h2>
+                <h2 className="text-2xl font-bold">Fee Collection Management</h2>
                 <button
                     className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center"
                     onClick={() => navigate('/admin-dashboard/fee-collections/create')}
                 >
-                    <FaUserPlus className="inline-block mr-2" /> Tạo đợt thu phí mới
+                    <FaUserPlus className="inline-block mr-2" /> Create New Fee Collection
                 </button>
             </div>
 
             {collections.length === 0 ? (
-                <div className="text-center text-gray-500 py-4">Không có đợt thu phí nào</div>
+                <div className="text-center text-gray-500 py-4">No fee collections found</div>
             ) : (
                 <div className="overflow-x-auto">
                     <table className="min-w-full bg-white border border-gray-300 rounded-md">
                         <thead>
                             <tr className="bg-gray-100">
-                                <th className="py-3 px-4 text-left border-b">STT</th>
-                                <th className="py-3 px-4 text-left border-b">ID</th>
-                                <th className="py-3 px-4 text-left border-b">Danh sách phí</th>
-                                <th className="py-3 px-4 text-left border-b">Ngày bắt đầu</th>
-                                <th className="py-3 px-4 text-left border-b">Ngày đến hạn</th>
-                                <th className="py-3 px-4 text-left border-b">Thao tác</th>
+                                <th className="py-3 px-4 text-left border-b">No.</th>
+                                <th className="py-3 px-4 text-left border-b">Name</th>
+                                <th className="py-3 px-4 text-left border-b">Fee List</th>
+                                <th className="py-3 px-4 text-left border-b">Start Date</th>
+                                <th className="py-3 px-4 text-left border-b">Due Date</th>
+                                <th className="py-3 px-4 text-left border-b">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {collections.map((collection, index) => (
                                 <tr key={collection._id} className="hover:bg-gray-50">
                                     <td className="py-3 px-4 border-b">{index + 1}</td>
-                                    <td className="py-3 px-4 border-b">{collection._id}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="text-sm text-gray-900">{collection.Name}</div>
+                                    </td>
                                     <td className="py-3 px-4 border-b">
                                         {collection.Fees && collection.Fees[0] ? (
                                             <div className="flex flex-wrap gap-1">
@@ -125,7 +143,7 @@ const FeeCollectionList = () => {
                                                 ))}
                                             </div>
                                         ) : (
-                                            <span className="text-gray-500">Không có phí</span>
+                                            <span className="text-gray-500">No fees</span>
                                         )}
                                     </td>
                                     <td className="py-3 px-4 border-b">{formatDate(collection.CreateDate)}</td>
@@ -135,14 +153,14 @@ const FeeCollectionList = () => {
                                             <button
                                                 className="bg-yellow-500 text-white p-2 rounded-md hover:bg-yellow-600 transition-colors"
                                                 onClick={() => navigate(`/admin-dashboard/fee-collections/edit/${collection._id}`)}
-                                                title="Chỉnh sửa"
+                                                title="Edit"
                                             >
                                                 <FaUserEdit />
                                             </button>
                                             <button
                                                 className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition-colors"
                                                 onClick={() => handleDelete(collection._id)}
-                                                title="Xóa"
+                                                title="Delete"
                                             >
                                                 <FaTrash />
                                             </button>
