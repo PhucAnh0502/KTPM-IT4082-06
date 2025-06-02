@@ -83,28 +83,28 @@ const UserList = () => {
             )}
 
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">Quản lý người dùng</h2>
+                <h2 className="text-2xl font-bold">User Management</h2>
                 <button
                     className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center"
-                    onClick={() => navigate('/admin/users/create')}
+                    onClick={() => navigate('/admin-dashboard/users/create')}
                 >
-                    <FaUserPlus className="inline-block mr-2" /> Thêm người dùng
+                    <FaUserPlus className="inline-block mr-2" /> Add User
                 </button>
             </div>
 
             {users.length === 0 ? (
-                <div className="text-center text-gray-500 py-4">Không có người dùng nào</div>
+                <div className="text-center text-gray-500 py-4">No users found</div>
             ) : (
                 <div className="overflow-x-auto">
                     <table className="min-w-full bg-white border border-gray-300 rounded-md">
                         <thead>
                             <tr className="bg-gray-100">
-                                <th className="py-3 px-4 text-left border-b">STT</th>
+                                <th className="py-3 px-4 text-left border-b">No.</th>
                                 <th className="py-3 px-4 text-left border-b">Email</th>
-                                <th className="py-3 px-4 text-left border-b">Vai trò</th>
-                                <th className="py-3 px-4 text-left border-b">Ngày tạo</th>
-                                <th className="py-3 px-4 text-left border-b">Cập nhật lần cuối</th>
-                                <th className="py-3 px-4 text-left border-b">Thao tác</th>
+                                <th className="py-3 px-4 text-left border-b">Role</th>
+                                <th className="py-3 px-4 text-left border-b">Created At</th>
+                                <th className="py-3 px-4 text-left border-b">Last Updated</th>
+                                <th className="py-3 px-4 text-left border-b">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -127,9 +127,16 @@ const UserList = () => {
                                     <td className="py-3 px-4 border-b">
                                         <div className="flex space-x-2">
                                             <button
+                                                onClick={() => navigate(`/admin-dashboard/users/edit/${user._id}`)}
+                                                className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition-colors"
+                                                title="Update"
+                                            >
+                                                <FaUserEdit />
+                                            </button>
+                                            <button
                                                 className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition-colors"
                                                 onClick={() => handleDelete(user._id)}
-                                                title="Xóa"
+                                                title="Delete"
                                             >
                                                 <FaTrash />
                                             </button>
