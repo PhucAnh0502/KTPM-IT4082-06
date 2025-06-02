@@ -2,29 +2,44 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllHouseholds, deleteHousehold } from '../../../services/householdService';
+import { getAllResidents } from '../../../services/residentService';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
 const HouseholdList = () => {
     const [households, setHouseholds] = useState([]);
+    const [residents, setResidents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [alert, setAlert] = useState({ type: '', message: '' });
     const navigate = useNavigate();
 
+    // Auto-hide alert after 3 seconds
     useEffect(() => {
-        const fetchHouseholds = async () => {
+        if (alert.message) {
+            const timer = setTimeout(() => setAlert({ type: '', message: '' }), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [alert]);
+
+    useEffect(() => {
+        const fetchData = async () => {
             try {
-                const response = await getAllHouseholds();
-                setHouseholds(response.houseHolds);
+                const [householdsResponse, residentsResponse] = await Promise.all([
+                    getAllHouseholds(),
+                    getAllResidents()
+                ]);
+                setHouseholds(householdsResponse.houseHolds);
+                setResidents(residentsResponse.residents || []);
                 setError(null);
             } catch (err) {
-                setError('Failed to fetch households. Please try again later.');
-                console.error('Error fetching households:', err);
+                setError('Failed to fetch data. Please try again later.');
+                console.error('Error fetching data:', err);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchHouseholds();
+        fetchData();
     }, []);
 
     const handleViewDetails = (id) => {
@@ -36,15 +51,38 @@ const HouseholdList = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this household?')) {
+        const householdToDelete = households.find(h => h._id === id);
+        if (!householdToDelete) return;
+
+        const confirmMessage = `Bạn có chắc chắn muốn xóa hộ gia đình này?\n` +
+            `- Địa chỉ: ${householdToDelete.Address}\n` +
+            `- Số thành viên: ${householdToDelete.HouseHoldMember?.length || 0}\n` +
+            `- Số phương tiện: ${householdToDelete.VehicleID?.length || 0}\n\n` +
+            `Lưu ý: Việc xóa sẽ ảnh hưởng đến:\n` +
+            `1. Thông tin của các thành viên trong hộ gia đình\n` +
+            `2. Các phương tiện đăng ký thuộc hộ gia đình\n` +
+            `3. Tài khoản của các thành viên\n` +
+            `Bạn có muốn tiếp tục không?`;
+
+        if (window.confirm(confirmMessage)) {
             try {
+                // Xóa hộ gia đình và các thành phần liên quan
                 await deleteHousehold(id);
-                // Refresh the list after deletion
+                
+                // Refresh danh sách sau khi xóa
                 const response = await getAllHouseholds();
                 setHouseholds(response.houseHolds);
+                
+                setAlert({
+                    type: 'success',
+                    message: `Đã xóa hộ gia đình ${householdToDelete.Address} và cập nhật thông tin liên quan!`
+                });
             } catch (err) {
                 console.error('Error deleting household:', err);
-                alert('Failed to delete household. Please try again.');
+                setAlert({
+                    type: 'error',
+                    message: 'Xóa hộ gia đình thất bại. Vui lòng thử lại.'
+                });
             }
         }
     };
@@ -99,7 +137,7 @@ const HouseholdList = () => {
                                     Area (m²)
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Household Head ID
+                                    Household Head
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Members
@@ -125,7 +163,13 @@ const HouseholdList = () => {
                                         {household.Area}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {household.HouseHoldHeadID}
+                                        {household.HouseHoldHeadID ? (
+                                            <span className="text-green-600">
+                                                {residents.find(r => r._id === household.HouseHoldHeadID)?.Name || 'N/A'}
+                                            </span>
+                                        ) : (
+                                            <span className="text-gray-400 italic">Chưa có chủ hộ</span>
+                                        )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {household.HouseHoldMember?.length || 0}

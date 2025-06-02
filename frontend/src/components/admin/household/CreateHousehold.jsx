@@ -154,16 +154,16 @@ const CreateHousehold = () => {
                             name="HouseHoldHeadID"
                             value={formData.HouseHoldHeadID}
                             onChange={handleInputChange}
-                            required
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         >
-                            <option value="">Select a resident</option>
+                            <option value="">Chọn chủ hộ (không bắt buộc)</option>
                             {residents.map(resident => (
                                 <option key={resident._id} value={resident._id}>
-                                    {resident.name} - {resident._id}
+                                    {resident.Name}
                                 </option>
                             ))}
                         </select>
+                        <p className="mt-1 text-sm text-gray-500">Có thể để trống và cập nhật sau</p>
                     </div>
 
                     <div>
@@ -209,7 +209,7 @@ const CreateHousehold = () => {
                         >
                             {vehicles.map(vehicle => (
                                 <option key={vehicle._id} value={vehicle._id}>
-                                    {vehicle.plateNumber} - {vehicle.brand} {vehicle.model}
+                                    {vehicle.VehicleType} - {vehicle.LicensePlate}
                                 </option>
                             ))}
                         </select>
