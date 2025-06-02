@@ -1,28 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllResidents, deleteResident } from '../../../services/residentService';
+import { getAllHouseholds } from '../../../services/householdService';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
 const ResidentList = () => {
     const navigate = useNavigate();
     const [residents, setResidents] = useState([]);
+    const [households, setHouseholds] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [alert, setAlert] = useState(null);
     
     useEffect(() => {
-        const fetchResidents = async () => {
+        const fetchData = async () => {
             try {
-                const response = await getAllResidents();
-                setResidents(response.residents);
+                const [residentsResponse, householdsResponse] = await Promise.all([
+                    getAllResidents(),
+                    getAllHouseholds()
+                ]);
+                setResidents(residentsResponse.residents || []);
+                setHouseholds(householdsResponse.houseHolds || []);
             } catch (err) {
-                setError('Failed to fetch residents. Please try again.');
-                console.error('Error fetching residents:', err);
+                setError('Failed to fetch data. Please try again.');
+                console.error('Error fetching data:', err);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchResidents();
+        fetchData();
     }, []);
 
     const handleEdit = (id) => {
@@ -30,13 +37,46 @@ const ResidentList = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this resident?')) {
+        const residentToDelete = residents.find(r => r._id === id);
+        if (!residentToDelete) return;
+
+        // Kiểm tra xem cư dân có thuộc hộ gia đình nào không
+        const relatedHouseholds = households.filter(h => 
+            (h.HouseHoldMember && h.HouseHoldMember.includes(id)) ||
+            h.HouseHoldHeadID === id
+        );
+
+        const confirmMessage = `Bạn có chắc chắn muốn xóa cư dân này?\n` +
+            `- Họ tên: ${residentToDelete.Name}\n` +
+            `- Số điện thoại: ${residentToDelete.PhoneNumber}\n` +
+            `Lưu ý: Việc xóa sẽ ảnh hưởng đến:\n` +
+            `1. Thông tin cư dân trong hộ gia đình liên quan\n` +
+            `2. Tài khoản của cư dân\n` +
+            `3. Các phương tiện đăng ký của cư dân\n` +
+            (relatedHouseholds.length > 0 ? `4. Các hộ gia đình mà cư dân là chủ hộ sẽ bị xóa thông tin chủ hộ\n` : '') +
+            `Bạn có muốn tiếp tục không?`;
+
+        if (window.confirm(confirmMessage)) {
             try {
                 await deleteResident(id);
-                setResidents(residents.filter((resident) => resident._id !== id));
+                // Refresh danh sách sau khi xóa
+                const [residentsResponse, householdsResponse] = await Promise.all([
+                    getAllResidents(),
+                    getAllHouseholds()
+                ]);
+                setResidents(residentsResponse.residents || []);
+                setHouseholds(householdsResponse.houseHolds || []);
+                setAlert({
+                    type: 'success',
+                    message: `Đã xóa cư dân ${residentToDelete.Name} và cập nhật thông tin liên quan!` +
+                        (relatedHouseholds.length > 0 ? ' Các hộ gia đình liên quan đã được cập nhật.' : '')
+                });
             } catch (err) {
-                setError('Failed to delete resident. Please try again.');
                 console.error('Error deleting resident:', err);
+                setAlert({
+                    type: 'error',
+                    message: 'Xóa cư dân thất bại. Vui lòng thử lại.'
+                });
             }
         }
     };

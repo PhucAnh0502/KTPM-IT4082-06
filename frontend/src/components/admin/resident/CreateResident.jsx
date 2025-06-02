@@ -8,6 +8,8 @@ const CreateResident = () => {
     const [households, setHouseholds] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [showPopup, setShowPopup] = useState(false);
+    const [accountInfo, setAccountInfo] = useState({ email: '', password: '' });
 
     const [formData, setFormData] = useState({
         Name: '',
@@ -64,14 +66,23 @@ const CreateResident = () => {
         setError(null);
 
         try {
-            await createResident(formData);
-            navigate('/admin-dashboard/residents');
+            const response = await createResident(formData);
+            setAccountInfo({
+                email: response.resident.email,
+                password: response.resident.password
+            });
+            setShowPopup(true);
         } catch (err) {
             setError('Failed to create resident. Please try again.');
             console.error('Error creating resident:', err);
         } finally {
             setLoading(false);
         }
+    };
+
+    const handlePopupClose = () => {
+        setShowPopup(false);
+        navigate('/admin-dashboard/residents');
     };
 
     if (loading) {
@@ -84,6 +95,26 @@ const CreateResident = () => {
 
     return (
         <div className="container mx-auto px-4 py-8">
+            {showPopup && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+                        <h2 className="text-xl font-bold mb-4">Account Created Successfully</h2>
+                        <div className="space-y-2">
+                            <p><span className="font-semibold">Email:</span> {accountInfo.email}</p>
+                            <p><span className="font-semibold">Password:</span> {accountInfo.password}</p>
+                        </div>
+                        <div className="mt-6 flex justify-end">
+                            <button
+                                onClick={handlePopupClose}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                            >
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
             <div className="max-w-2xl mx-auto">
                 <h1 className="text-2xl font-bold text-gray-800 mb-6">Create New Resident</h1>
                 
