@@ -4,10 +4,9 @@ import { getAllFees, updateFee } from '../../../services/feeService';
 import { getAllFeeCollections } from '../../../services/feeCollectionService';
 
 const FEE_TYPES = [
-    { value: 'water', label: 'Nước' },
-    { value: 'electricity', label: 'Điện' },
-    { value: 'maintenance', label: 'Bảo trì' },
-    { value: 'other', label: 'Khác' }
+    { value: 'vehicle_fee', label: 'Phí xe' },
+    { value: 'service', label: 'Phí dịch vụ' },
+    { value: 'management', label: 'Phí quản lý' }
 ];
 
 const UpdateFee = () => {
@@ -71,10 +70,45 @@ const UpdateFee = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+
+        // Lấy thông tin phí cũ để so sánh
+        const oldFee = await getAllFees().then(res => 
+            res.fees.find(f => f._id === id)
+        );
+
         // Chỉ lấy đúng 4 trường cần thiết
         const { FeeType, Description, feeName, FeeCollectionID } = fee;
         const payload = { FeeType, Description, feeName, FeeCollectionID };
+
         try {
+            // Nếu tên phí thay đổi, cần cập nhật trong các đợt thu phí
+            if (oldFee && oldFee.feeName !== feeName) {
+                const relatedCollections = collections.filter(col => 
+                    col.Fees && col.Fees.includes(oldFee.feeName)
+                );
+
+                if (relatedCollections.length > 0) {
+                    if (!window.confirm(
+                        `Phí này đang được sử dụng trong ${relatedCollections.length} đợt thu phí. ` +
+                        `Việc thay đổi tên phí sẽ ảnh hưởng đến các đợt thu phí này. Bạn có muốn tiếp tục?`
+                    )) {
+                        setLoading(false);
+                        return;
+                    }
+
+                    // Cập nhật tên phí trong các đợt thu phí liên quan
+                    for (const collection of relatedCollections) {
+                        const updatedFees = collection.Fees.map(f => 
+                            f === oldFee.feeName ? feeName : f
+                        );
+                        await updateFeeCollection(collection._id, {
+                            ...collection,
+                            Fees: updatedFees
+                        });
+                    }
+                }
+            }
+
             await updateFee(id, payload);
             setAlert({ type: 'success', message: 'Cập nhật phí thành công!' });
             setTimeout(() => {
@@ -181,7 +215,7 @@ const UpdateFee = () => {
                             <option value="">Chọn đợt thu phí</option>
                             {collections.map(col => (
                                 <option key={col._id} value={col._id}>
-                                    {col.name || col._id}
+                                    {col.Name}
                                 </option>
                             ))}
                         </select>

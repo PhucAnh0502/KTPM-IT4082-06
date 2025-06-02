@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUserPlus, FaUserEdit, FaTrash, FaEye } from 'react-icons/fa';
 import { getAllFees, deleteFee } from '../../../services/feeService';
+import { getAllFeeCollections } from '../../../services/feeCollectionService';
 
 const FeeLists = () => {
     const [fees, setFees] = useState([]);
+    const [collections, setCollections] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [alert, setAlert] = useState({ type: '', message: '' });
@@ -19,30 +21,68 @@ const FeeLists = () => {
     }, [alert]);
 
     useEffect(() => {
-        const fetchFees = async () => {
+        const fetchData = async () => {
             try {
-                const response = await getAllFees();
-                if (response?.fees && Array.isArray(response.fees)) {
-                    setFees(response.fees);
-                } else {
-                    
+                const [feesRes, collectionsRes] = await Promise.all([
+                    getAllFees(),
+                    getAllFeeCollections()
+                ]);
+                
+                if (feesRes?.fees && Array.isArray(feesRes.fees)) {
+                    setFees(feesRes.fees);
                 }
+                
+                if (collectionsRes?.feeCollections && Array.isArray(collectionsRes.feeCollections)) {
+                    setCollections(collectionsRes.feeCollections);
+                }
+                
                 setLoading(false);
             } catch (error) {
-                setError(error.response?.data?.error || 'Failed to fetch fees');
+                setError(error.response?.data?.error || 'Failed to fetch data');
                 setLoading(false);
             }
         };
-        fetchFees();
+        fetchData();
     }, []);
 
     const handleDelete = async (id) => {
-        try {
-            await deleteFee(id);
-            setFees(fees.filter((fee) => fee._id !== id));
-            setAlert({ type: 'success', message: 'Xóa phí thành công!' });
-        } catch (error) {
-            setAlert({ type: 'error', message: error.response?.data?.error || 'Xóa phí thất bại!' });
+        const feeToDelete = fees.find(f => f._id === id);
+        if (!feeToDelete) return;
+
+        // Check if fee is being used in any fee collections
+        const relatedCollections = collections.filter(col => 
+            col.Fees && col.Fees.includes(feeToDelete.feeName)
+        );
+
+        if (relatedCollections.length > 0) {
+            setAlert({ 
+                type: 'error', 
+                message: `Cannot delete this fee as it is being used in ${relatedCollections.length} fee collections. Please delete or update related fee collections first.` 
+            });
+            return;
+        }
+
+        if (window.confirm(`Are you sure you want to delete fee "${feeToDelete.feeName}"?`)) {
+            try {
+                await deleteFee(id);
+                // Refresh both fee and fee collection lists
+                const [feesRes, collectionsRes] = await Promise.all([
+                    getAllFees(),
+                    getAllFeeCollections()
+                ]);
+                
+                if (feesRes?.fees && Array.isArray(feesRes.fees)) {
+                    setFees(feesRes.fees);
+                }
+                
+                if (collectionsRes?.feeCollections && Array.isArray(collectionsRes.feeCollections)) {
+                    setCollections(collectionsRes.feeCollections);
+                }
+                
+                setAlert({ type: 'success', message: 'Fee deleted successfully!' });
+            } catch (error) {
+                setAlert({ type: 'error', message: error.response?.data?.error || 'Failed to delete fee!' });
+            }
         }
     };
 
@@ -92,7 +132,7 @@ const FeeLists = () => {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fee Type</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fee Name</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Collection ID</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Collection Name</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -102,23 +142,32 @@ const FeeLists = () => {
                                 <td className="px-6 py-4 whitespace-nowrap">{fee.FeeType}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{fee.feeName}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{fee.Description}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">{fee.FeeCollectionID}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    {fee.FeeCollectionID ? (
+                                        collections.find(col => col._id === fee.FeeCollectionID)?.Name || 'N/A'
+                                    ) : (
+                                        'N/A'
+                                    )}
+                                </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <button
                                         onClick={() => navigate(`/admin-dashboard/fees/${fee._id}`)}
                                         className="text-blue-600 hover:text-blue-900 mr-3"
+                                        title="View Details"
                                     >
                                         <FaEye />
                                     </button>
                                     <button
                                         onClick={() => navigate(`/admin-dashboard/fees/edit/${fee._id}`)}
                                         className="text-yellow-600 hover:text-yellow-900 mr-3"
+                                        title="Edit"
                                     >
                                         <FaUserEdit />
                                     </button>
                                     <button
                                         onClick={() => handleDelete(fee._id)}
                                         className="text-red-600 hover:text-red-900"
+                                        title="Delete"
                                     >
                                         <FaTrash />
                                     </button>

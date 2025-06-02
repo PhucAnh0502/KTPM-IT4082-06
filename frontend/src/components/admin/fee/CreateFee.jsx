@@ -5,10 +5,9 @@ import { createFee } from '../../../services/feeService';
 import { getAllFeeCollections } from '../../../services/feeCollectionService';
 
 const FEE_TYPES = {
-    WATER: 'water',
-    ELECTRICITY: 'electricity',
-    MAINTENANCE: 'maintenance',
-    OTHER: 'other'
+    VEHICLE_FEE: 'vehicle_fee',
+    SERVICE: 'service',
+    MANAGEMENT: 'management'
 };
 
 const CreateFee = () => {
@@ -117,10 +116,9 @@ const CreateFee = () => {
                             required
                         >
                             <option value="">Chọn loại phí</option>
-                            <option value={FEE_TYPES.WATER}>Nước</option>
-                            <option value={FEE_TYPES.ELECTRICITY}>Điện</option>
-                            <option value={FEE_TYPES.MAINTENANCE}>Bảo trì</option>
-                            <option value={FEE_TYPES.OTHER}>Khác</option>
+                            <option value={FEE_TYPES.VEHICLE_FEE}>Phí xe</option>
+                            <option value={FEE_TYPES.SERVICE}>Phí dịch vụ</option>
+                            <option value={FEE_TYPES.MANAGEMENT}>Phí quản lý</option>
                         </select>
                     </div>
 
@@ -169,7 +167,7 @@ const CreateFee = () => {
                             <option value="">Chọn đợt thu phí</option>
                             {collections.map(col => (
                                 <option key={col._id} value={col._id}>
-                                    {col.name || col._id}
+                                    {col.Name}
                                 </option>
                             ))}
                         </select>
