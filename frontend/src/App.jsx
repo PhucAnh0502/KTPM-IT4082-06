@@ -159,8 +159,6 @@ function App() {
           <Route path="*" element={<NotFoundPage onClose = {() => window.history.back()} />} />
         </Routes>
       </div>
-
-      </main>
       <footer className="bg-gray-800 text-white text-center p-4 mt-auto">
         <p>&copy; {new Date().getFullYear()} Management App. All rights reserved.</p>
       </footer>
