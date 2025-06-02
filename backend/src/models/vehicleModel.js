@@ -18,7 +18,7 @@ const vehicleSchema = new mongoose.Schema(
     },
     VehicleType: {
       type: String,
-      enum: ["Car", "motorcycle", "bicycle"], // Ví dụ các giá trị enum
+      enum: ["Car", "Motorcycle"], // Ví dụ các giá trị enum
       required: true,
     },
   },

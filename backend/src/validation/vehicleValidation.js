@@ -5,7 +5,7 @@ const createVehicle = async (req, res, next) => {
   const schema = joi.object({
     LicensePlate: joi.string().required(),
     HouseHoldID: joi.string().required(),
-    VehicleType: joi.string().valid("Car", "Bike", "Truck").required(),
+    VehicleType: joi.string().valid("Car", "Motorcycle").required(),
   });
 
   try {
@@ -22,7 +22,7 @@ const updateVehicle = async (req, res, next) => {
   const schema = joi.object({
     LicensePlate: joi.string().optional(),
     HouseHoldID: joi.string().optional(),
-    VehicleType: joi.string().valid("Car", "Bike", "Truck").optional(),
+    VehicleType: joi.string().valid("Car", "Motorcycle").optional(),
   });
 
   try {
