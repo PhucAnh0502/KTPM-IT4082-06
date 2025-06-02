@@ -13,6 +13,7 @@ import {
   FaMoneyBillWave,
   FaHome,
   FaUserShield,
+  FaCar
 } from "react-icons/fa";
 
 const Sidebar = () => {
@@ -56,31 +57,11 @@ const Sidebar = () => {
         label: "Residents",
         roles: ["admin"]
       },
-      // Accountant specific items
       {
-        path: `/${role}-dashboard/payments`,
-        icon: <FaMoneyBillWave className="text-xl" />,
-        label: "Payments",
-        roles: ["accountant"]
-      },
-      {
-        path: `/${role}-dashboard/reports`,
-        icon: <FaFileAlt className="text-xl" />,
-        label: "Financial Reports",
-        roles: ["accountant"]
-      },
-      // Resident specific items
-      {
-        path: `/${role}-dashboard/my-room`,
-        icon: <FaHome className="text-xl" />,
-        label: "My Room",
-        roles: ["resident"]
-      },
-      {
-        path: `/${role}-dashboard/payment-history`,
-        icon: <FaMoneyBillWave className="text-xl" />,
-        label: "Payment History",
-        roles: ["resident"]
+        path: `/${role}-dashboard/vehicles`,
+        icon: <FaCar className="text-xl" />,
+        label: "Vehicles",
+        roles: ["admin"]
       }
     ];
 

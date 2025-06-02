@@ -23,25 +23,13 @@ import UpdateHouseHold from './components/admin/household/UpdateHouseHold';
 import ResidentList from './components/admin/resident/ResidentList'; 
 import CreateResident from './components/admin/resident/CreateResident';
 import UpdateResident from './components/admin/resident/UpdateResident';
+import VehicleList from './components/admin/vehicle/VehicleList';
+import UpdateVehicle from './components/admin/vehicle/UpdateVehicle';
+import CreateVehicle from './components/admin/vehicle/CreateVehicle';
+import CreateUser from './components/admin/user/CreateUser';
+import UpdateUser from './components/admin/user/UpdateUser';
 // Placeholder pages
 const NotFoundPage = () => <div className="p-4 text-center"><h2 className="text-2xl font-bold">404 - Page Not Found</h2><p>The page you are looking for does not exist.</p></div>;
-
-
-// Helper function to get dashboard path
-const getDashboardPath = (role) => {
-  switch (role) {
-    case 'admin':
-      return '/admin-dashboard';
-    case 'leader':
-      return '/leader-dashboard';
-    case 'resident':
-      return '/resident-dashboard';
-    case 'accountant':
-      return '/accountant-dashboard';
-    default:
-      return '/';
-  }
-};
 
 function App() {
   const { loadingAuth } = useAuth();
@@ -96,6 +84,8 @@ function App() {
           }>
             <Route index element={<AdminSummary />} />
             <Route path = "/admin-dashboard/users" element = {<UserList />} />
+            <Route path = "/admin-dashboard/users/create" element = {<CreateUser />} />
+            <Route path = "/admin-dashboard/users/edit/:id" element = {<UpdateUser />} />
             <Route path = "/admin-dashboard/fees" element = {<FeeLists />} />
             <Route path = "/admin-dashboard/fees/create" element = {<CreateFee />} />
             <Route path = "/admin-dashboard/fees/edit/:id" element = {<UpdateFee />} />
@@ -108,6 +98,9 @@ function App() {
             <Route path = "/admin-dashboard/residents" element = {<ResidentList />} />
             <Route path = "/admin-dashboard/residents/create" element = {<CreateResident />} />
             <Route path = "/admin-dashboard/residents/edit/:id" element = {<UpdateResident />} />
+            <Route path = "/admin-dashboard/vehicles" element = {<VehicleList />} />
+            <Route path = "/admin-dashboard/vehicles/edit/:id" element = {<UpdateVehicle />} />
+            <Route path = "/admin-dashboard/vehicles/create" element = {<CreateVehicle />} />
           </Route>
 
           <Route path="*" element={<NotFoundPage onClose = {() => window.history.back()} />} />
