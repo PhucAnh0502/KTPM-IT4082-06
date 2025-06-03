@@ -20,15 +20,8 @@ export const createFee = async (data) => {
     return response.data;
   };
   
-  // In feeService.js
-export const getAllFees = async () => {
-    try {
-        const response = await fetch('/api/fees'); // Example API call
-        const data = await response.json();
-        // Ensure data is an array; return empty array if not
-        return Array.isArray(data) ? data : [];
-    } catch (error) {
-        throw new Error('Failed to fetch fees');
-    }
-};
+  export const getAllFees = async () => {
+    const response = await feeApi.getAllFees();
+    return response.data; 
+  };
   
