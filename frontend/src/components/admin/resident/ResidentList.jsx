@@ -137,7 +137,7 @@ const ResidentList = () => {
                                     Gender
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Household IDs
+                                    Address
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Occupation
@@ -172,7 +172,10 @@ const ResidentList = () => {
                                         {resident.Gender}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {resident.HouseHoldID?.join(', ')}
+                                        {resident.HouseHoldID?.map(id => {
+                                            const household = households.find(h => h._id === id);
+                                            return household ? household.Address : 'N/A';
+                                        }).join(', ')}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {resident.Occupation}

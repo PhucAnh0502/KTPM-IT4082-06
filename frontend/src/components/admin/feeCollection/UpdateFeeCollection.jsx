@@ -40,6 +40,12 @@ const UpdateFeeCollection = () => {
         fetchFees();
     }, []);
 
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toISOString().split('T')[0];
+    };
+
     // Fetch fee collection data
     useEffect(() => {
         const fetchFeeCollection = async () => {
@@ -48,10 +54,17 @@ const UpdateFeeCollection = () => {
                 if (response?.feeCollections && Array.isArray(response.feeCollections)) {
                     const found = response.feeCollections.find(fc => fc._id === id);
                     if (found) {
+                        // Convert fee names to IDs for the select element
+                        const feeIds = found.Fees.map(feeName => {
+                            const fee = fees.find(f => f.feeName === feeName);
+                            return fee ? fee._id : null;
+                        }).filter(Boolean);
+
                         setFeeCollection({
                             ...found,
-                            CreateDate: found.CreateDate ? new Date(found.CreateDate).toISOString().slice(0, 16) : '',
-                            DueDate: found.DueDate ? new Date(found.DueDate).toISOString().slice(0, 16) : ''
+                            Fees: feeIds,
+                            CreateDate: found.CreateDate ? formatDate(found.CreateDate) : '',
+                            DueDate: found.DueDate ? formatDate(found.DueDate) : ''
                         });
                     } else {
                         setAlert({ type: 'error', message: 'Không tìm thấy đợt thu phí' });
@@ -64,7 +77,7 @@ const UpdateFeeCollection = () => {
             }
         };
         fetchFeeCollection();
-    }, [id]);
+    }, [id, fees]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -85,10 +98,15 @@ const UpdateFeeCollection = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            // Convert fee IDs back to names for the API
+            const feeNames = feeCollection.Fees.map(feeId => {
+                const fee = fees.find(f => f._id === feeId);
+                return fee ? fee.feeName : null;
+            }).filter(Boolean);
+
             // Format dates
             const formattedData = {
-                Name: feeCollection.Name.trim(),
-                Fees: Array.isArray(feeCollection.Fees) ? feeCollection.Fees.flat().filter(Boolean) : [],
+                Fees: feeNames,
                 CreateDate: formatDate(feeCollection.CreateDate),
                 DueDate: formatDate(feeCollection.DueDate)
             };
@@ -160,13 +178,12 @@ const UpdateFeeCollection = () => {
                         id="fees"
                         name="Fees"
                         value={feeCollection.Fees}
-                        onChange={handleChange}
+                        onChange={handleFeeSelection}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         multiple
-                        required
                     >
                         {fees.map((fee) => (
-                            <option key={fee._id} value={fee.feeName}>
+                            <option key={fee._id} value={fee._id}>
                                 {fee.feeName}
                             </option>
                         ))}

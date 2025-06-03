@@ -52,12 +52,19 @@ const CreateFeeCollection = () => {
         const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
         setFeeCollection(prev => ({
             ...prev,
-            Fees: selectedOptions // Store as array of selected fees
+            Fees: selectedOptions // Store as array of selected fee IDs
         }));
+    };
+
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toISOString().split('T')[0];
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             // Format dates
             const formattedData = {
@@ -73,8 +80,10 @@ const CreateFeeCollection = () => {
         } catch (error) {
             setAlert({ 
                 type: 'error', 
-                message: error.response?.data?.error || 'Failed to create fee collection!' 
+                message: error.response?.data?.error || 'Failed to create fee collection. Please check your input and try again.' 
             });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -133,13 +142,12 @@ const CreateFeeCollection = () => {
                         id="fees"
                         name="Fees"
                         value={feeCollection.Fees}
-                        onChange={handleChange}
+                        onChange={handleFeeSelection}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         multiple
-                        required
                     >
                         {fees.map((fee) => (
-                            <option key={fee._id} value={fee.feeName}>
+                            <option key={fee._id} value={fee._id}>
                                 {fee.feeName}
                             </option>
                         ))}

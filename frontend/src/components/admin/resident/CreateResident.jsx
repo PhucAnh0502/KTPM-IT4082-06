@@ -190,7 +190,7 @@ const CreateResident = () => {
                         >
                             {households.map(household => (
                                 <option key={household._id} value={household._id}>
-                                    {household.Address} - {household._id}
+                                    {household.Address}
                                 </option>
                             ))}
                         </select>
