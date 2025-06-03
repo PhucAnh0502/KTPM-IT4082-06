@@ -8,6 +8,7 @@ import { accountApi,
         feeCollectionApi, 
         paymentApi } from '../../services/api';
 import SummaryCard from './SummaryCard';
+import StatisticsCharts from './StatisticsCharts';
 import { FaUsers, FaHome, FaCar, FaMoneyBillWave, FaFileInvoiceDollar, FaCreditCard } from 'react-icons/fa';
 
 const AdminSummary = () => {
@@ -119,13 +120,14 @@ const AdminSummary = () => {
                     number={feeCollections.length}
                     color="bg-indigo-500"
                 /> 
-                <SummaryCard 
-                    icon={<FaCreditCard />}
-                    text="Total Payments"
-                    number={payments.length}
-                    color="bg-pink-500"
-                />
             </div>
+
+            {/* Statistics Charts */}
+            <StatisticsCharts 
+                feeCollections={feeCollections}
+                payments={payments}
+                fees={fees}
+            />
         </div>
     );
 }

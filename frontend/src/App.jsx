@@ -13,6 +13,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import UserList from './components/admin/user/UserList';
 import FeeLists from './components/admin/fee/FeeLists';
 import CreateFee from './components/admin/fee/CreateFee';
+import ViewDetailsFee from './components/admin/fee/ViewDetailsFee';
 import FeeCollectionList from './components/admin/feeCollection/FeeCollectionList';
 import CreateFeeCollection from './components/admin/feeCollection/CreateFeeCollection';
 import UpdateFeeCollection from './components/admin/feeCollection/UpdateFeeCollection';
@@ -28,6 +29,7 @@ import UpdateVehicle from './components/admin/vehicle/UpdateVehicle';
 import CreateVehicle from './components/admin/vehicle/CreateVehicle';
 import CreateUser from './components/admin/user/CreateUser';
 import UpdateUser from './components/admin/user/UpdateUser';
+import PaymentList from './components/admin/payments/PaymentList';
 import AccountantDashboard from './pages/AccountantDashboard';
 import LeaderDashboard from './pages/leader/LeaderDashboard';
 import FeesList from './components/accountant/FeeList';
@@ -113,6 +115,7 @@ function App() {
             <Route path = "/admin-dashboard/fees" element = {<FeeLists />} />
             <Route path = "/admin-dashboard/fees/create" element = {<CreateFee />} />
             <Route path = "/admin-dashboard/fees/edit/:id" element = {<UpdateFee />} />
+            <Route path = "/admin-dashboard/fees/:id" element = {<ViewDetailsFee />} />
             <Route path = "/admin-dashboard/fee-collections" element = {<FeeCollectionList />} />
             <Route path = "/admin-dashboard/fee-collections/create" element = {<CreateFeeCollection />} />
             <Route path = "/admin-dashboard/fee-collections/edit/:id" element = {<UpdateFeeCollection />} />
@@ -125,6 +128,7 @@ function App() {
             <Route path = "/admin-dashboard/vehicles" element = {<VehicleList />} />
             <Route path = "/admin-dashboard/vehicles/edit/:id" element = {<UpdateVehicle />} />
             <Route path = "/admin-dashboard/vehicles/create" element = {<CreateVehicle />} />
+            <Route path = "/admin-dashboard/payments" element = {<PaymentList />} />
             {/* Add other admin sub-routes here */}
           </Route>
 
@@ -159,9 +163,6 @@ function App() {
           <Route path="*" element={<NotFoundPage onClose = {() => window.history.back()} />} />
         </Routes>
       </div>
-      <footer className="bg-gray-800 text-white text-center p-4 mt-auto">
-        <p>&copy; {new Date().getFullYear()} Management App. All rights reserved.</p>
-      </footer>
     </div>
   );
 }

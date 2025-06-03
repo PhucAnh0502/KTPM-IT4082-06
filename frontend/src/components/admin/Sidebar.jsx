@@ -63,6 +63,12 @@ const Sidebar = () => {
         icon: <FaCar className="text-xl" />,
         label: "Vehicles",
         roles: ["admin"]
+      },
+      {
+        path: `/${role}-dashboard/payments`,
+        icon: <FaMoneyBillWave className="text-xl" />,
+        label: "Payments",
+        roles: ["admin", "leader"]
       }
     ];
 

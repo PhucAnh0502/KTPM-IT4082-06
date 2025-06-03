@@ -18,7 +18,12 @@ const payFeeSchema = new mongoose.Schema(
     },
     PayDate: {
       type: Date,
-      default: Date.now,
+      default: null,
+    },
+    Status: {
+      type: String,
+      enum: ["Pending", "Paid", "Failed"], 
+      default: "Pending",
     },
   },
   { timestamps: true }

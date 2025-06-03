@@ -6,7 +6,8 @@ const createPayFee = async (req, res, next) => {
     FeeID: Joi.string().required(),
     HouseHoldID: Joi.string().required(),
     Amount: Joi.number().required(),
-    PayDate: Joi.date().default(() => new Date()),
+    PayDate: Joi.date().default(null),
+    Status: Joi.string().valid("Pending", "Paid", "Failed").default("Pending"),
   });
 
   try {
@@ -24,9 +25,8 @@ const updatePayFee = async (req, res, next) => {
     FeeID: Joi.string().optional(),
     HouseHoldID: Joi.string().optional(),
     Amount: Joi.number().optional(),
-    PayDate: Joi.date()
-      .default(() => new Date())
-      .optional(),
+    PayDate: Joi.date().default(null).optional(),
+    Status: Joi.string().valid("Pending", "Paid", "Failed").optional(),
   });
 
   try {
