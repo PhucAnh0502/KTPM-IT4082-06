@@ -27,6 +27,7 @@ import AccountantDashboard from './pages/AccountantDashboard';
 import LeaderDashboard from './pages/leader/LeaderDashboard';
 import FeesList from './components/accountant/FeeList';
 import HouseholdResidentPage from './pages/leader/LeaderHouseholdResidentPage';
+import LeaderSummary from './components/leader/LeaderSummary';
 
 // Placeholder pages
 const NotFoundPage = () => <div className="p-4 text-center"><h2 className="text-2xl font-bold">404 - Page Not Found</h2><p>The page you are looking for does not exist.</p></div>;
@@ -133,24 +134,22 @@ function App() {
           <Route path="/leader-dashboard" element={
             <PrivateRoutes>
               <RoleBaseRoutes allowedRoles={['leader']}>
-                <LeaderDashboard />
+                <div className="min-h-[calc(100vh-4rem)]">
+                  <LeaderDashboard />
+                </div>
               </RoleBaseRoutes>
             </PrivateRoutes>
           }>
-            <Route path="households" element={
-              <PrivateRoutes>
-                <RoleBaseRoutes allowedRoles={['leader']}>
-                  <HouseholdResidentPage />
-                </RoleBaseRoutes>
-              </PrivateRoutes>
-            } />
+            <Route index element={<LeaderSummary />} />
+            <Route path="households" element={<HouseholdResidentPage />} />
+            
+            {/* Add other leader sub-routes here */}
           </Route>
 
           <Route path="*" element={<NotFoundPage onClose = {() => window.history.back()} />} />
         </Routes>
       </div>
 
-      </main>
       <footer className="bg-gray-800 text-white text-center p-4 mt-auto">
         <p>&copy; {new Date().getFullYear()} Management App. All rights reserved.</p>
       </footer>

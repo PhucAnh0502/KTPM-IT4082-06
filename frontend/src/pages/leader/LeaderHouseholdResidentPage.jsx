@@ -1,5 +1,5 @@
 import React from 'react';
-import HouseholdResidentList from '../../components/leader/HouseHoldResidentList';
+import HouseholdResidentList from '../../components/leader/householdresident/HouseholdResidentList';
 
 const HouseholdResidentPage = () => (
   <div className="min-h-screen bg-gray-100 flex flex-col">

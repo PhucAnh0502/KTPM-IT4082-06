@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { getAllHouseholds } from '../../services/householdService';
-import { getAllResidents } from '../../services/residentService';
+import { getAllHouseholds } from '../../../services/householdService';
+import { getAllResidents } from '../../../services/residentService';
 import ResidentList from './ResidentList';
 const HouseholdResidentList = () => {
   const [households, setHouseholds] = useState([]);

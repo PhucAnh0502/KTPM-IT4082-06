@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAllFeeCollections } from '../../services/feeCollectionService';
+import { getAllFeeCollections } from '../../../services/feeCollectionService';
 
 const FeeCollectionList = () => {
   const [collections, setCollections] = useState([]);
