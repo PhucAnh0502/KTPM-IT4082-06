@@ -15,6 +15,37 @@ const createHouseHold = async (req, res, next) => {
     });
   }
 };
+const assignHouseHoldHead = async (req, res, next) => {
+  try {
+    const { HouseHoldHeadID } = req.body;
+    const householdId = req.params.id;
+
+    if (!HouseHoldHeadID) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: "HouseHoldHeadID is required",
+      });
+    }
+
+    const result = await houseHoldService.assignHouseHoldHead(householdId, HouseHoldHeadID);
+    
+    if (result.status && result.status !== StatusCodes.OK) {
+      return res.status(result.status).json({
+        message: result.message,
+        error: result.error,
+      });
+    }
+
+    res.status(StatusCodes.OK).json({
+      message: result.message || "Household head assigned successfully",
+      houseHold: result.data || result,
+    });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error assigning household head",
+      error: error.message,
+    });
+  }
+};
 const readHouseHold = async (req, res, next) => {
   try {
     const houseHold = await houseHoldService.readHouseHold(req.params.id);
@@ -102,5 +133,6 @@ export const houseHoldController = {
   removeHouseHold,
   updateHouseHold,
   getAllHouseHolds,
+  assignHouseHoldHead
   // more
 };

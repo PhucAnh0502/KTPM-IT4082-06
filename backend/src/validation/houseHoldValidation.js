@@ -5,7 +5,6 @@ const createHouseHold = async (req, res, next) => {
   const schema = joi.object({
     HouseHoldMember: joi.array().items(joi.string()).required(),
     Area: joi.number().required(),
-    HouseHoldHeadID: joi.string().required(),
     Address: joi.string().required(),
     VehicleID: joi.array().items(joi.string()).optional(),
   });
