@@ -5,6 +5,7 @@ import {
   update,
   getAll,
 } from "../models/houseHoldModel.js";
+import { StatusCodes } from "http-status-codes";
 
 const createHouseHold = async (data) => {
   try {
@@ -21,6 +22,30 @@ const createHouseHold = async (data) => {
     };
   }
 };
+
+const assignHouseHoldHead = async (houseHoldId, headId) => {
+  try {
+    const houseHold = await update(houseHoldId, { HouseHoldHeadID: headId });
+    if (!houseHold) {
+      return {
+        status: StatusCodes.NOT_FOUND,
+        message: "Household not found",
+      };
+    }
+    return {
+      status: StatusCodes.OK,
+      data: houseHold,
+      message: "Household head assigned successfully",
+    };
+  } catch (error) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: "Error assigning household head",
+      error: error.message,
+    };
+  }
+};
+
 const readHouseHold = async (id) => {
   try {
     const houseHold = await read(id);
@@ -93,5 +118,5 @@ export const houseHoldService = {
   removeHouseHold,
   updateHouseHold,
   getAllHouseHolds,
-  // more
+  assignHouseHoldHead
 };
