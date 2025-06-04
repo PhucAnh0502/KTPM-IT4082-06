@@ -5,6 +5,10 @@ import { getAllResidents } from '../../../services/residentService';
 
 const CreateVehicle = () => {
     const navigate = useNavigate();
+    // Add role and dashboardPrefix logic
+    const role = localStorage.getItem("accountRole")?.toLowerCase() || "resident";
+    const dashboardPrefix = role === "leader" ? "/leader-dashboard" : "/admin-dashboard";
+
     const [residents, setResidents] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -47,7 +51,7 @@ const CreateVehicle = () => {
 
         try {
             await createVehicle(formData);
-            navigate('/admin-dashboard/vehicles');
+            navigate(`${dashboardPrefix}/vehicles`);
         } catch (err) {
             setError('Failed to create vehicle. Please try again.');
             console.error('Error creating vehicle:', err);
@@ -129,7 +133,7 @@ const CreateVehicle = () => {
                     <div className="flex justify-end space-x-4">
                         <button
                             type="button"
-                            onClick={() => navigate('/admin-dashboard/vehicles')}
+                            onClick={() => navigate(`${dashboardPrefix}/vehicles`)}
                             className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                         >
                             Cancel
@@ -147,4 +151,4 @@ const CreateVehicle = () => {
     );
 };
 
-export default CreateVehicle; 
+export default CreateVehicle;

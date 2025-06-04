@@ -2,17 +2,11 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import {
   FaBuilding,
-  FaCalendarCheck,
-  FaCog,
-  FaDumbbell,
-  FaFileAlt,
+  FaFileInvoiceDollar,
   FaTachometerAlt,
   FaUsers,
-  FaChalkboardTeacher,
   FaMoneyBillWave,
-  FaHome,
-  FaUserShield,
-  FaListUl
+  FaCar
 } from "react-icons/fa";
 
 const LeaderSidebar = () => {
@@ -26,46 +20,40 @@ const LeaderSidebar = () => {
         label: "Dashboard",
         roles: ["admin", "leader", "resident", "accountant"]
       },
-    ];
-
-    const roleSpecificItems = [
-      // Admin specific items
       {
-        path: `/${role}-dashboard/users`,
-        icon: <FaUsers className="text-xl" />,
-        label: "Users Management",
-        roles: ["admin"]
+
+        path: `/${role}-dashboard/fees`,
+        icon: <FaMoneyBillWave className="text-xl" />,
+        label: "Fees List",
+        roles: ["leader"]
+      },
+      {
+        path: `/${role}-dashboard/fee-collections`,
+        icon: <FaFileInvoiceDollar className="text-xl" />,
+        label: "Fee Collections List",
+        roles: ["leader"]
       },
       {
         path: `/${role}-dashboard/households`,
         icon: <FaBuilding className="text-xl" />,
         label: "Household",
-        roles: ["admin", "leader"]
+        roles: ["leader"]
       },
       {
-        path: `/${role}-dashboard/maintenance`,
-        icon: <FaCog className="text-xl" />,
-        label: "Maintenance",
-        roles: ["admin", "leader"]
-      },
-      // Leader specific items
-      
-      // Accountant specific items
-      {
-        path: `/${role}-dashboard/payments`,
-        icon: <FaMoneyBillWave className="text-xl" />,
-        label: "Payments",
-        roles: ["accountant", "leader"]
+        path: `/${role}-dashboard/residents`,
+        icon: <FaUsers className="text-xl" />,
+        label: "Residents",
+        roles: ["leader"]
       },
       {
-        path: `/${role}-dashboard/reports`,
-        icon: <FaFileAlt className="text-xl" />,
-        label: "Financial Reports",
-        roles: ["accountant", "leader"]
+        path: `/${role}-dashboard/vehicles`,
+        icon: <FaCar className="text-xl" />,
+        label: "Vehicles",
+        roles: ["leader"]
       },
     ];
 
-    return [...commonItems, ...roleSpecificItems].filter(item =>
+    return [...commonItems].filter(item => 
       item.roles.includes(role)
     );
   };

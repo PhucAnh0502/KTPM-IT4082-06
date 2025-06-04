@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllHouseholds, deleteHousehold } from '../../../services/householdService';
 import { getAllResidents } from '../../../services/residentService';
@@ -11,6 +10,8 @@ const HouseholdList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [alert, setAlert] = useState({ type: '', message: '' });
+    const role = localStorage.getItem("accountRole")?.toLowerCase() || "resident";
+    const dashboardPrefix = role === "leader" ? "/leader-dashboard" : "/admin-dashboard";
     const navigate = useNavigate();
 
     // Auto-hide alert after 3 seconds
@@ -41,13 +42,11 @@ const HouseholdList = () => {
 
         fetchData();
     }, []);
-
     const handleViewDetails = (id) => {
-        navigate(`/admin-dashboard/households/${id}`);
+        navigate(`${dashboardPrefix}/households/${id}`);
     };
-
     const handleEdit = (id) => {
-        navigate(`/admin-dashboard/households/edit/${id}`);
+        navigate(`${dashboardPrefix}/households/edit/${id}`);
     };
 
     const handleDelete = async (id) => {
@@ -66,13 +65,11 @@ const HouseholdList = () => {
 
         if (window.confirm(confirmMessage)) {
             try {
-                // Xóa hộ gia đình và các thành phần liên quan
                 await deleteHousehold(id);
-                
                 // Refresh danh sách sau khi xóa
                 const response = await getAllHouseholds();
                 setHouseholds(response.houseHolds);
-                
+
                 setAlert({
                     type: 'success',
                     message: `Đã xóa hộ gia đình ${householdToDelete.Address} và cập nhật thông tin liên quan!`
@@ -111,7 +108,7 @@ const HouseholdList = () => {
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800">Household List</h1>
                 <button
-                    onClick={() => navigate('/admin-dashboard/households/create')}
+                    onClick={() => navigate(`${dashboardPrefix}/households/create`)}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
                     Add New Household
