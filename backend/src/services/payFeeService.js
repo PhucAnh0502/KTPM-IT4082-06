@@ -30,7 +30,8 @@ const createVehicleFeeForAllHouseholds = async (data) => {
         HouseHoldID: household._id,
         FeeID: data.FeeID,
         Amount: amount,
-        PayDate: data.PayDate || new Date(),
+        PayDate: null,
+        Status: "Pending",
       };
       const createdPayFee = await create(newPayFee);
     }
@@ -55,7 +56,8 @@ const createManegemantFeeForAllHouseholds = async (data) => {
         HouseHoldID: household._id,
         FeeID: data.FeeID,
         Amount: amout,
-        PayDate: data.PayDate || new Date(),
+        PayDate: null,
+        Status: "Pending",
       };
       const createdPayFee = await create(newPayFee);
     }
@@ -80,7 +82,8 @@ const createServiceFeeForAllHouseholds = async (data) => {
         HouseHoldID: household._id,
         FeeID: data.FeeID,
         Amount: amout,
-        PayDate: data.PayDate || new Date(),
+        PayDate: null,
+        Status: "Pending",
       };
       const createdPayFee = await create(newPayFee);
     }

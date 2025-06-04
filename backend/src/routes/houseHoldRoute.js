@@ -23,31 +23,52 @@ router.get("/", (req, res) => {
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - HouseHoldMember
+ *               - Area
+ *               - Address
  *             properties:
  *               HouseHoldMember:
  *                 type: array
  *                 items:
  *                   type: string
  *                 example: ["Member1", "Member2"]
+ *                 description: List of household members (required)
  *               Area:
  *                 type: number
  *                 example: 120.5
+ *                 description: Area of the household (required)
  *               HouseHoldHeadID:
  *                 type: string
  *                 example: "HHH12345"
+ *                 description: ID of household head (optional)
  *               Address:
  *                 type: string
  *                 example: "123 Main Street"
+ *                 description: Address of the household (required)
  *               VehicleID:
  *                 type: array
  *                 items:
  *                   type: string
  *                 example: ["V123", "V124"]
+ *                 description: List of vehicle IDs (optional)
  *     responses:
  *       201:
  *         description: Household created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Household created successfully"
+ *                 houseHold:
+ *                   type: object
  *       400:
  *         description: Validation failed
+ *       401:
+ *         description: Unauthorized
  */
 router.post(
   "/create",
@@ -55,6 +76,49 @@ router.post(
   authRoles("leader", "admin"),
   houseHoldValidation.createHouseHold,
   houseHoldController.createHouseHold
+);
+/**
+ * @swagger
+ * /households/assign-head/{id}:
+ *   patch:
+ *     summary: Assign or update household head
+ *     tags:
+ *       - Households
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Household ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - HouseHoldHeadID
+ *             properties:
+ *               HouseHoldHeadID:
+ *                 type: string
+ *                 example: "HHH12345"
+ *                 description: ID of the new household head
+ *     responses:
+ *       200:
+ *         description: Household head assigned successfully
+ *       400:
+ *         description: Validation failed
+ *       404:
+ *         description: Household not found
+ */
+router.patch(
+  "/assign-head/:id",
+  authMiddleware,
+  authRoles("leader", "admin"),
+  houseHoldController.assignHouseHoldHead
 );
 /**
  * @swagger
@@ -71,34 +135,45 @@ router.post(
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                     example: "HH12345"
- *                   HouseHoldMember:
- *                     type: array
- *                     items:
- *                       type: string
- *                     example: ["Member1", "Member2"]
- *                   Area:
- *                     type: number
- *                     example: 120.5
- *                   HouseHoldHeadID:
- *                     type: string
- *                     example: "HHH12345"
- *                   Address:
- *                     type: string
- *                     example: "123 Main Street"
- *                   VehicleID:
- *                     type: array
- *                     items:
- *                       type: string
- *                     example: ["V123", "V124"]
- *       400:
- *         description: Validation failed
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Households retrieved successfully"
+ *                 houseHolds:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         example: "HH12345"
+ *                       HouseHoldMember:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                         example: ["Member1", "Member2"]
+ *                       Area:
+ *                         type: number
+ *                         example: 120.5
+ *                       HouseHoldHeadID:
+ *                         type: string
+ *                         example: "HHH12345"
+ *                         nullable: true
+ *                       Address:
+ *                         type: string
+ *                         example: "123 Main Street"
+ *                       VehicleID:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                         example: ["V123", "V124"]
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                       updatedAt:
+ *                         type: string
+ *                         format: date-time
  *       401:
  *         description: Unauthorized
  */
@@ -198,20 +273,26 @@ router.delete(
  *                 items:
  *                   type: string
  *                 example: ["Member1", "Member2"]
+ *                 description: List of household members
  *               Area:
  *                 type: number
  *                 example: 150.75
+ *                 description: Area of the household
  *               HouseHoldHeadID:
  *                 type: string
  *                 example: "HHH67890"
+ *                 description: ID of household head (optional)
+ *                 nullable: true
  *               Address:
  *                 type: string
  *                 example: "456 Elm Street"
+ *                 description: Address of the household
  *               VehicleID:
  *                 type: array
  *                 items:
  *                   type: string
  *                 example: ["V125", "V126"]
+ *                 description: List of vehicle IDs
  *     responses:
  *       200:
  *         description: Household updated successfully

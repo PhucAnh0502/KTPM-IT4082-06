@@ -29,7 +29,6 @@ const LoginPage = () => {
       }
     } catch (err) {
       setError('An error occurred during login. Please try again.');
-      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }
@@ -42,15 +41,6 @@ const LoginPage = () => {
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Sign in to your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link
-              to="/register"
-              className="font-medium text-blue-600 hover:text-blue-500"
-            >
-              create a new account
-            </Link>
-          </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
@@ -90,6 +80,17 @@ const LoginPage = () => {
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end">
+            <div className="text-sm">
+              <Link
+                to="/forgot-password"
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
+                Quên mật khẩu?
+              </Link>
             </div>
           </div>
 

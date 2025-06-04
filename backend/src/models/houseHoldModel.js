@@ -17,7 +17,7 @@ const houseHoldSchema = new mongoose.Schema(
     HouseHoldHeadID: {
       type: String,
       ref: "Resident",
-      required: true,
+      required: false,
     },
     Address: {
       type: String,

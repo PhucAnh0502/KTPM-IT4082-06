@@ -22,6 +22,6 @@ export const createFee = async (data) => {
   
   export const getAllFees = async () => {
     const response = await feeApi.getAllFees();
-    return response.data;
+    return response.data; 
   };
   

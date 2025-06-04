@@ -8,10 +8,10 @@ import {
 import { create as createAccount } from "../models/accountModel.js";
 const createResident = async (data) => {
   try {
-    const name = data.Name.replace(/\s+/g, "");
+    const name = data.Name.replace(/\s+/g, "").toLowerCase();
     const newAccount = {
       Email: `${name}@bluemoon.com`,
-      Password: 123456,
+      Password: "123456",
       Role: data.Role || "resident", // Default role is 'resident'
     };
     const account = await createAccount(newAccount);
@@ -21,7 +21,11 @@ const createResident = async (data) => {
     };
     const createdResident = await create(newResident);
     console.log("createdResident : ", createdResident);
-    return createdResident;
+    return {
+      ...createdResident,
+      email: newAccount.Email,
+      password: newAccount.Password
+    };
   } catch (error) {
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,

@@ -3,7 +3,7 @@ import Joi from "joi";
 const createFee = async (req, res, next) => {
   const schema = Joi.object({
     FeeType: Joi.string()
-      .valid("water", "electricity", "maintenance", "other")
+      .valid("vehicle_fee", "service", "management")
       .required(),
     Description: Joi.string().required(),
     feeName: Joi.string().required(),
@@ -23,7 +23,7 @@ const createFee = async (req, res, next) => {
 const updateFee = async (req, res, next) => {
   const schema = Joi.object({
     FeeType: Joi.string()
-      .valid("water", "electricity", "maintenance", "other")
+      .valid("vehicle_fee", "service", "management")
       .optional(),
     Description: Joi.string().optional(),
     feeName: Joi.string().optional(),
