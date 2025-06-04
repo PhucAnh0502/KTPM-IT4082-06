@@ -1,5 +1,21 @@
-name: ktpm-backend
+name: ktpm
 services:
+  backend:
+    container_name: ktpm-backend
+    build:
+      context: ./backend
+      dockerfile: api.Dockerfile
+    ports:
+     - "3003:3003"
+    depends_on:
+     - mongo
+    env_file:
+      - ./backend/.env
+    volumes:
+     - ./backend:/app
+     - /app/node_modules
+    restart: always
+
   mongo:
     image: mongo:8.0.4
     restart: always
@@ -24,6 +40,21 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: password
       ME_CONFIG_MONGODB_URL: mongodb://root:password@mongo:27017/?authSource=admin
       ME_CONFIG_BASICAUTH: false
-
+      
+  frontend:
+    container_name: ktpm-frontend
+    build:
+      context: ./frontend
+      dockerfile: fe.Dockerfile
+    ports:
+     - "3000:3000"
+    depends_on:
+     - backend
+    env_file:
+      - ./frontend/.env
+    volumes:
+     - ./frontend:/app
+     - /app/node_modules
+    restart: always
 volumes:
   mongo_data:
