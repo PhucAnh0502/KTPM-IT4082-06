@@ -30,10 +30,21 @@ import CreateVehicle from './components/admin/vehicle/CreateVehicle';
 import CreateUser from './components/admin/user/CreateUser';
 import UpdateUser from './components/admin/user/UpdateUser';
 import PaymentList from './components/admin/payments/PaymentList';
-import AccountantDashboard from './pages/AccountantDashboard';
+import AccountantDashboard from './pages/accountant/AccountantDashboard';
+import AccountantSummary from './components/accountant/AccountantSumary';
 import LeaderDashboard from './pages/leader/LeaderDashboard';
-import FeesList from './components/accountant/FeeList';
 import HouseholdResidentPage from './pages/leader/LeaderHouseholdResidentPage';
+import AccountantProfile from './pages/accountant/AccountantProfile';
+import AccountantPayments from './pages/accountant/AccountantPayments';
+import AccountantFinancialReport from './pages/accountant/AccountantFinancialReport';
+import AccountantCreateFee from './components/accountant/fee/CreateFee';
+import AccountantUpdateFee from './components/accountant/fee/UpdateFee';
+import AccountantFeeLists from './components/accountant/fee/FeeLists';
+import AccountantViewDetailsFee from './components/accountant/fee/ViewDetailsFee';
+import AccountantCreateFeeCollection from './components/accountant/feeCollection/CreateFeeCollection';
+import AccountantUpdateFeeCollection from './components/accountant/feeCollection/UpdateFeeCollection';
+import AccountantFeeCollectionList from './components/accountant/feeCollection/FeeCollectionList';
+import AccountantPaymentList from './components/accountant/payments/PaymentList';
 
 // Placeholder pages
 const NotFoundPage = () => <div className="p-4 text-center"><h2 className="text-2xl font-bold">404 - Page Not Found</h2><p>The page you are looking for does not exist.</p></div>;
@@ -140,7 +151,18 @@ function App() {
               </RoleBaseRoutes>
             </PrivateRoutes>
           }>
-            <Route path='fees' element={<FeesList />} /> 
+            <Route index element={<AccountantSummary />} />
+            <Route path="profile" element={<AccountantProfile />} />
+            <Route path="payments" element={<AccountantPayments />} />
+            <Route path="reports" element={<AccountantFinancialReport />} />
+            <Route path = "reports" index element = {<AccountantFeeLists />} />
+            <Route path = "reports/fees/create"  element = {<AccountantCreateFee />} />
+            <Route path = "reports/fees/edit/:id" element = {<AccountantUpdateFee />} />
+            <Route path = "reports/fees/:id" element = {<AccountantViewDetailsFee />} />
+            <Route path = "reports/fee-collections" element = {<AccountantFeeCollectionList />} />
+            <Route path = "reports/fee-collections/create" element = {<AccountantCreateFeeCollection />} />
+            <Route path = "reports/fee-collections/edit/:id" element = {<AccountantUpdateFeeCollection />} />
+            <Route path = "payments" index element = {<AccountantPaymentList />} />
           </Route>
 
           {/* Leader Routes */}

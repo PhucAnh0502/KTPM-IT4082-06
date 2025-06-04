@@ -24,13 +24,7 @@ const Sidebar = () => {
         icon: <FaTachometerAlt className="text-xl" />,
         label: "Dashboard",
         roles: ["admin", "leader", "resident", "accountant"]
-      },
-      {
-        path: `/${role}-dashboard/profile`,
-        icon: <FaUserShield className="text-xl" />,
-        label: "Profile",
-        roles: ["admin", "leader", "resident", "accountant"]
-      }
+      },      
     ];
 
     const roleSpecificItems = [
