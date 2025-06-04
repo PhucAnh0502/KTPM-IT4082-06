@@ -14,7 +14,6 @@ const CreateHousehold = () => {
     const [formData, setFormData] = useState({
         HouseHoldMember: [''],
         Area: '',
-        HouseHoldHeadID: '',
         Address: '',
         VehicleID: []
     });
@@ -91,7 +90,7 @@ const CreateHousehold = () => {
                 HouseHoldMember: filteredMembers,
                 Area: parseFloat(formData.Area)
             };
-
+            console.log(householdData);
             await createHousehold(householdData);
             navigate('/admin-dashboard/households');
         } catch (err) {
@@ -146,24 +145,6 @@ const CreateHousehold = () => {
                             min="0"
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Household Head</label>
-                        <select
-                            name="HouseHoldHeadID"
-                            value={formData.HouseHoldHeadID}
-                            onChange={handleInputChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        >
-                            <option value="">Chọn chủ hộ (không bắt buộc)</option>
-                            {residents.map(resident => (
-                                <option key={resident._id} value={resident._id}>
-                                    {resident.Name}
-                                </option>
-                            ))}
-                        </select>
-                        <p className="mt-1 text-sm text-gray-500">Có thể để trống và cập nhật sau</p>
                     </div>
 
                     <div>
