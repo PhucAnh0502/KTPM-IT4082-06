@@ -27,33 +27,7 @@ const Sidebar = () => {
       },      
     ];
 
-    const roleSpecificItems = [
-      // Admin specific items
-      {
-        path: `/${role}-dashboard/users`,
-        icon: <FaUsers className="text-xl" />,
-        label: "Users Management",
-        roles: ["admin"]
-      },
-      {
-        path: `/${role}-dashboard/rooms`,
-        icon: <FaBuilding className="text-xl" />,
-        label: "Rooms",
-        roles: ["admin", "leader"]
-      },
-      {
-        path: `/${role}-dashboard/maintenance`,
-        icon: <FaCog className="text-xl" />,
-        label: "Maintenance",
-        roles: ["admin", "leader"]
-      },
-      // Leader specific items
-      {
-        path: `/${role}-dashboard/residents`,
-        icon: <FaUsers className="text-xl" />,
-        label: "Residents",
-        roles: ["leader"]
-      },
+    const roleSpecificItems = [    
       // Accountant specific items
       {
         path: `/${role}-dashboard/payments`,
@@ -64,25 +38,12 @@ const Sidebar = () => {
       {
         path: `/${role}-dashboard/reports`,
         icon: <FaFileAlt className="text-xl" />,
-        label: "Financial Reports",
+        label: "Fee Management",
         roles: ["accountant"]
       },
-      // Resident specific items
-      {
-        path: `/${role}-dashboard/my-room`,
-        icon: <FaHome className="text-xl" />,
-        label: "My Room",
-        roles: ["resident"]
-      },
-      {
-        path: `/${role}-dashboard/payment-history`,
-        icon: <FaMoneyBillWave className="text-xl" />,
-        label: "Payment History",
-        roles: ["resident"]
-      }
     ];
 
-    return [...commonItems, ...roleSpecificItems].filter(item => 
+    return [...commonItems, ...roleSpecificItems].filter(item =>
       item.roles.includes(role)
     );
   };
