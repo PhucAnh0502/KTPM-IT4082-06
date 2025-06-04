@@ -239,7 +239,7 @@ const CreateResident = () => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Household Relation</label>
+                        <label className="block text-sm font-medium text-gray-700">HouseholdHead Relation</label>
                         <input
                             type="text"
                             name="HouseHoldRelation"

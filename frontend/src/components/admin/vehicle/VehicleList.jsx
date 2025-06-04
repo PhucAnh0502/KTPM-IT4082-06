@@ -6,6 +6,10 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 
 const VehicleList = () => {
     const navigate = useNavigate();
+    // Add role and dashboardPrefix logic
+    const role = localStorage.getItem("accountRole")?.toLowerCase() || "resident";
+    const dashboardPrefix = role === "leader" ? "/leader-dashboard" : "/admin-dashboard";
+
     const [vehicles, setVehicles] = useState([]);
     const [residents, setResidents] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -91,7 +95,7 @@ const VehicleList = () => {
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800">Vehicle List</h1>
                 <button
-                    onClick={() => navigate('/admin-dashboard/vehicles/create')}
+                    onClick={() => navigate(`${dashboardPrefix}/vehicles/create`)}
                     className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                 >
                     Add New Vehicle
@@ -142,7 +146,7 @@ const VehicleList = () => {
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <button
-                                        onClick={() => navigate(`/admin-dashboard/vehicles/edit/${vehicle._id}`)}
+                                        onClick={() => navigate(`${dashboardPrefix}/vehicles/edit/${vehicle._id}`)}
                                         className="text-blue-600 hover:text-blue-900 mr-4"
                                     >
                                         <FaEdit className="inline-block" />

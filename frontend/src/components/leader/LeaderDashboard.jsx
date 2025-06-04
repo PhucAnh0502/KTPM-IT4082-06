@@ -1,5 +1,5 @@
 import React from 'react';
-import LeaderSidebar from '../../components/leader/LeaderSidebar';
+import LeaderSidebar from './LeaderSidebar';
 import { Outlet } from 'react-router-dom';
 
 const LeaderDashboard = () => {

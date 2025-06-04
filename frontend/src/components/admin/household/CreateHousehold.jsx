@@ -6,11 +6,14 @@ import { getAllVehicles } from '../../../services/vehicleService';
 
 const CreateHousehold = () => {
     const navigate = useNavigate();
+    const role = localStorage.getItem("accountRole")?.toLowerCase() || "resident";
+    const dashboardPrefix = role === "leader" ? "/leader-dashboard" : "/admin-dashboard";
+
     const [residents, setResidents] = useState([]);
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
+    
     const [formData, setFormData] = useState({
         HouseHoldMember: [''],
         Area: '',
@@ -92,7 +95,7 @@ const CreateHousehold = () => {
             };
             console.log(householdData);
             await createHousehold(householdData);
-            navigate('/admin-dashboard/households');
+            navigate(`${dashboardPrefix}/households`);
         } catch (err) {
             setError('Failed to create household. Please try again.');
             console.error('Error creating household:', err);
@@ -200,7 +203,7 @@ const CreateHousehold = () => {
                     <div className="flex justify-end space-x-4">
                         <button
                             type="button"
-                            onClick={() => navigate('/admin-dashboard/households')}
+                            onClick={() => navigate(`${dashboardPrefix}/households`)}
                             className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                         >
                             Cancel
@@ -219,4 +222,3 @@ const CreateHousehold = () => {
 };
 
 export default CreateHousehold;
-        

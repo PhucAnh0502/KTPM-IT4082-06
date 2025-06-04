@@ -32,8 +32,7 @@ import UpdateUser from './components/admin/user/UpdateUser';
 import PaymentList from './components/admin/payments/PaymentList';
 import AccountantDashboard from './pages/accountant/AccountantDashboard';
 import AccountantSummary from './components/accountant/AccountantSumary';
-import LeaderDashboard from './pages/leader/LeaderDashboard';
-import HouseholdResidentPage from './pages/leader/LeaderHouseholdResidentPage';
+import LeaderDashboard from './components/leader/LeaderDashboard';
 import AccountantProfile from './pages/accountant/AccountantProfile';
 import AccountantPayments from './pages/accountant/AccountantPayments';
 import AccountantFinancialReport from './pages/accountant/AccountantFinancialReport';
@@ -45,7 +44,9 @@ import AccountantCreateFeeCollection from './components/accountant/feeCollection
 import AccountantUpdateFeeCollection from './components/accountant/feeCollection/UpdateFeeCollection';
 import AccountantFeeCollectionList from './components/accountant/feeCollection/FeeCollectionList';
 import AccountantPaymentList from './components/accountant/payments/PaymentList';
-
+import LeaderSummary from './components/leader/LeaderSummary';
+import LeaderFeeList from './components/leader/Fee&FeeCollectionList/LeaderFeeLists';
+import LeaderFeeCollectionList from './components/leader/Fee&FeeCollectionList/LeaderFeeCollectionList';
 // Placeholder pages
 const NotFoundPage = () => <div className="p-4 text-center"><h2 className="text-2xl font-bold">404 - Page Not Found</h2><p>The page you are looking for does not exist.</p></div>;
 
@@ -173,13 +174,18 @@ function App() {
               </RoleBaseRoutes>
             </PrivateRoutes>
           }>
-            <Route path="households" element={
-              <PrivateRoutes>
-                <RoleBaseRoutes allowedRoles={['leader']}>
-                  <HouseholdResidentPage />
-                </RoleBaseRoutes>
-              </PrivateRoutes>
-            } />
+            <Route index element={<LeaderSummary />} />
+            <Route path = "/leader-dashboard/fees" element = {<LeaderFeeList />} />
+            <Route path = "/leader-dashboard/fee-collections" element = {<LeaderFeeCollectionList />} />
+            <Route path = "/leader-dashboard/households" element = {<HouseholdList />} />
+            <Route path = "/leader-dashboard/households/create" element = {<CreateHousehold />} />
+            <Route path = "/leader-dashboard/households/edit/:id" element = {<UpdateHouseHold />} />
+            <Route path = "/leader-dashboard/residents" element = {<ResidentList />} />
+            <Route path = "/leader-dashboard/residents/create" element = {<CreateResident />} />
+            <Route path = "/leader-dashboard/residents/edit/:id" element = {<UpdateResident />} />
+            <Route path = "/leader-dashboard/vehicles" element = {<VehicleList />} />
+            <Route path = "/leader-dashboard/vehicles/edit/:id" element = {<UpdateVehicle />} />
+            <Route path = "/leader-dashboard/vehicles/create" element = {<CreateVehicle />} />
           </Route>
 
           <Route path="*" element={<NotFoundPage onClose = {() => window.history.back()} />} />

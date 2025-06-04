@@ -6,6 +6,10 @@ import { getAllHouseholds } from '../../../services/householdService';
 const UpdateResident = () => {
     const navigate = useNavigate();
     const { id } = useParams();
+    // Add role and dashboardPrefix logic
+    const role = localStorage.getItem("accountRole")?.toLowerCase() || "resident";
+    const dashboardPrefix = role === "leader" ? "/leader-dashboard" : "/admin-dashboard";
+
     const [households, setHouseholds] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -90,7 +94,7 @@ const UpdateResident = () => {
 
         try {
             await updateResident(id, formData);
-            navigate('/admin-dashboard/residents');
+            navigate(`${dashboardPrefix}/residents`);
         } catch (err) {
             setError('Failed to update resident. Please try again.');
             console.error('Error updating resident:', err);
@@ -233,7 +237,7 @@ const UpdateResident = () => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Household Relation</label>
+                        <label className="block text-sm font-medium text-gray-700">HouseholdHead Relation</label>
                         <input
                             type="text"
                             name="HouseHoldRelation"
@@ -247,7 +251,7 @@ const UpdateResident = () => {
                     <div className="flex justify-end space-x-4">
                         <button
                             type="button"
-                            onClick={() => navigate('/admin-dashboard/residents')}
+                            onClick={() => navigate(`${dashboardPrefix}/residents`)}
                             className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                         >
                             Cancel

@@ -11,6 +11,10 @@ const ResidentList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [alert, setAlert] = useState(null);
+
+    // Add role and dashboardPrefix logic
+    const role = localStorage.getItem("accountRole")?.toLowerCase() || "resident";
+    const dashboardPrefix = role === "leader" ? "/leader-dashboard" : "/admin-dashboard";
     
     useEffect(() => {
         const fetchData = async () => {
@@ -33,7 +37,7 @@ const ResidentList = () => {
     }, []);
 
     const handleEdit = (id) => {
-        navigate(`/admin-dashboard/residents/edit/${id}`);
+        navigate(`${dashboardPrefix}/residents/edit/${id}`);
     };
 
     const handleDelete = async (id) => {
@@ -105,7 +109,7 @@ const ResidentList = () => {
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800">Resident List</h1>
                 <button
-                    onClick={() => navigate('/admin-dashboard/residents/create')}
+                    onClick={() => navigate(`${dashboardPrefix}/residents/create`)}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
                     Add New Resident
@@ -216,6 +220,4 @@ const ResidentList = () => {
 
 export default ResidentList;
 
-    
-    
 
