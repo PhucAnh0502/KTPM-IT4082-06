@@ -5,6 +5,10 @@ import { getAllHouseholds } from '../../../services/householdService';
 
 const CreateResident = () => {
     const navigate = useNavigate();
+    // Add role and dashboardPrefix logic
+    const role = localStorage.getItem("accountRole")?.toLowerCase() || "resident";
+    const dashboardPrefix = role === "leader" ? "/leader-dashboard" : "/admin-dashboard";
+
     const [households, setHouseholds] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -82,7 +86,7 @@ const CreateResident = () => {
 
     const handlePopupClose = () => {
         setShowPopup(false);
-        navigate('/admin-dashboard/residents');
+        navigate(`${dashboardPrefix}/residents`);
     };
 
     if (loading) {
@@ -253,7 +257,7 @@ const CreateResident = () => {
                     <div className="flex justify-end space-x-4">
                         <button
                             type="button"
-                            onClick={() => navigate('/admin-dashboard/residents')}
+                            onClick={() => navigate(`${dashboardPrefix}/residents`)}
                             className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                         >
                             Cancel
