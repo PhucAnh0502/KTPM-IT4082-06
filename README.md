@@ -1,7 +1,7 @@
 # KTPM-IT4082-06
 
 ## Công nghệ sử dụng
-- **Backend**: FastAPI, MongoDB
+- **Backend**: NodeJS, ExpressJS 
 - **Frontend**: React, Vite
 - **Database**: MongoDB
 - **Container**: Docker
