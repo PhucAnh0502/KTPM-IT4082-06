@@ -1,5 +1,13 @@
 # KTPM-IT4082-06
 
+## Nhóm 06 : Danh Sách Thành Viên
+
+1. **Nguyễn Phúc Anh** - Mã số sinh viên: 20225784   
+2. **Lê Đồng Cảnh Phú** - Mã số sinh viên: 20225755   
+3. **Phạm Gia Khiêm** - Mã số sinh viên: 20225868   
+4. **Bùi Minh Tuấn** - Mã số sinh viên: 20225678 
+5. **Vũ Quang Dũng** - Mã số sinh viên: 20225818 
+
 ## Công nghệ sử dụng
 - **Backend**: NodeJS, ExpressJS 
 - **Frontend**: React, Vite
