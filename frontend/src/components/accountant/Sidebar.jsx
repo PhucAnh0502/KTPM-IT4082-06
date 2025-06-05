@@ -41,6 +41,12 @@ const Sidebar = () => {
         label: "Fee Management",
         roles: ["accountant"]
       },
+      {
+        path: `/${role}-dashboard/fee-collections`,
+        icon: <FaFileAlt className="text-xl" />,
+        label: "Fee Collection",
+        roles: ["accountant"]
+      },
     ];
 
     return [...commonItems, ...roleSpecificItems].filter(item =>

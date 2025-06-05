@@ -76,7 +76,7 @@ const CreateFeeCollection = () => {
 
             await createFeeCollection(formattedData);
             setAlert({ type: 'success', message: 'Fee collection created successfully!' });
-            navigate('/accountant-dashboard/reports/fee-collections');
+            navigate('/accountant-dashboard/fee-collections');
         } catch (error) {
             setAlert({ 
                 type: 'error', 
@@ -112,7 +112,7 @@ const CreateFeeCollection = () => {
                 <h2 className="text-2xl font-bold">Create New Fee Collection</h2>
                 <button
                     className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition-colors flex items-center"
-                    onClick={() => navigate('/accountant-dashboard/reports/fee-collections')}
+                    onClick={() => navigate('/accountant-dashboard/fee-collections')}
                 >
                     <FaArrowLeft className="inline-block mr-2" /> Back to List
                 </button>
