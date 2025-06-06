@@ -102,7 +102,7 @@ const FeeCollectionList = () => {
                 <h2 className="text-2xl font-bold">Fee Collection Management</h2>
                 <button
                     className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center"
-                    onClick={() => navigate('/accountant-dashboard/reports/fee-collections/create')}
+                    onClick={() => navigate('/accountant-dashboard/fee-collections/create')}
                 >
                     <FaUserPlus className="inline-block mr-2" /> Create New Fee Collection
                 </button>
@@ -152,7 +152,7 @@ const FeeCollectionList = () => {
                                         <div className="flex space-x-2">
                                             <button
                                                 className="bg-yellow-500 text-white p-2 rounded-md hover:bg-yellow-600 transition-colors"
-                                                onClick={() => navigate(`/accountant-dashboard/reports/fee-collections/edit/${collection._id}`)}
+                                                onClick={() => navigate(`/accountant-dashboard/fee-collections/edit/${collection._id}`)}
                                                 title="Edit"
                                             >
                                                 <FaUserEdit />

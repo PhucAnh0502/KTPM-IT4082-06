@@ -160,9 +160,9 @@ function App() {
             <Route path = "reports/fees/create"  element = {<AccountantCreateFee />} />
             <Route path = "reports/fees/edit/:id" element = {<AccountantUpdateFee />} />
             <Route path = "reports/fees/:id" element = {<AccountantViewDetailsFee />} />
-            <Route path = "reports/fee-collections" element = {<AccountantFeeCollectionList />} />
-            <Route path = "reports/fee-collections/create" element = {<AccountantCreateFeeCollection />} />
-            <Route path = "reports/fee-collections/edit/:id" element = {<AccountantUpdateFeeCollection />} />
+            <Route path = "fee-collections" element = {<AccountantFeeCollectionList />} />
+            <Route path = "fee-collections/create" element = {<AccountantCreateFeeCollection />} />
+            <Route path = "fee-collections/edit/:id" element = {<AccountantUpdateFeeCollection />} />
             <Route path = "payments" index element = {<AccountantPaymentList />} />
           </Route>
 
