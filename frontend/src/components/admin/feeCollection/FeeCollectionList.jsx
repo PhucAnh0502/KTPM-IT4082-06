@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { getAllFeeCollections, deleteFeeCollection } from '../../../services/feeCollectionService';
 import { useNavigate } from 'react-router-dom';
-import { FaUserPlus, FaUserEdit, FaTrash, FaEye } from 'react-icons/fa';
+import { FaUserPlus, FaUserEdit, FaTrash, FaEye, FaSearch, FaFilter } from 'react-icons/fa';
 
 const FeeCollectionList = () => {
     const [collections, setCollections] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [alert, setAlert] = useState({ type: '', message: '' });
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showFilters, setShowFilters] = useState(false);
+    const [startDate, setStartDate] = useState('');
+    const [dueDate, setDueDate] = useState('');
     const navigate = useNavigate();
 
     // Auto-hide alert after 3 seconds
@@ -74,6 +78,14 @@ const FeeCollectionList = () => {
         });
     };
 
+    // Filter collections based on search term and date filters
+    const filteredCollections = collections.filter(collection => {
+        const matchesSearch = collection.Name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesStartDate = !startDate || new Date(collection.CreateDate) >= new Date(startDate);
+        const matchesDueDate = !dueDate || new Date(collection.DueDate) <= new Date(dueDate);
+        return matchesSearch && matchesStartDate && matchesDueDate;
+    });
+
     if (loading) return <div className="p-4">Loading...</div>;
     if (error) return <div className="p-4 text-red-500">{error}</div>;
 
@@ -108,7 +120,56 @@ const FeeCollectionList = () => {
                 </button>
             </div>
 
-            {collections.length === 0 ? (
+            {/* Search and Filter Section */}
+            <div className="mb-6">
+                <div className="flex items-center space-x-4">
+                    <div className="relative flex-1">
+                        <input
+                            type="text"
+                            placeholder="Search by Collection Name..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <FaSearch className="absolute left-3 top-3 text-gray-400" />
+                    </div>
+                    <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className="p-2 border rounded-lg hover:bg-gray-100"
+                        title="Show Filters"
+                    >
+                        <FaFilter className="text-gray-600" />
+                    </button>
+                </div>
+
+                {/* Filter Options */}
+                {showFilters && (
+                    <div className="mt-4 p-4 bg-white border rounded-lg shadow-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                                <input
+                                    type="date"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
+                                <input
+                                    type="date"
+                                    value={dueDate}
+                                    onChange={(e) => setDueDate(e.target.value)}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {filteredCollections.length === 0 ? (
                 <div className="text-center text-gray-500 py-4">No fee collections found</div>
             ) : (
                 <div className="overflow-x-auto">
@@ -124,7 +185,7 @@ const FeeCollectionList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {collections.map((collection, index) => (
+                            {filteredCollections.map((collection, index) => (
                                 <tr key={collection._id} className="hover:bg-gray-50">
                                     <td className="py-3 px-4 border-b">{index + 1}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">

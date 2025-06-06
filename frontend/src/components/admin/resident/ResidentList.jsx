@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllResidents, deleteResident } from '../../../services/residentService';
 import { getAllHouseholds } from '../../../services/householdService';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaSearch, FaFilter } from 'react-icons/fa';
 
 const ResidentList = () => {
     const navigate = useNavigate();
@@ -11,6 +11,10 @@ const ResidentList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [alert, setAlert] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showFilters, setShowFilters] = useState(false);
+    const [genderFilter, setGenderFilter] = useState('all');
+    const [statusFilter, setStatusFilter] = useState('all');
 
     // Add role and dashboardPrefix logic
     const role = localStorage.getItem("accountRole")?.toLowerCase() || "resident";
@@ -85,6 +89,18 @@ const ResidentList = () => {
         }
     };
 
+    // Filter residents based on search term and filters
+    const filteredResidents = residents.filter(resident => {
+        const matchesSearch = resident.Name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesGender = genderFilter === 'all' || resident.Gender === genderFilter;
+        const matchesStatus = statusFilter === 'all' || resident.Status === statusFilter;
+        
+        return matchesSearch && matchesGender && matchesStatus;
+    });
+
+    // Get unique statuses for filter
+    const uniqueStatuses = [...new Set(residents.map(resident => resident.Status))];
+
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -116,7 +132,65 @@ const ResidentList = () => {
                 </button>
             </div>
 
-            {residents.length === 0 ? (
+            {/* Search and Filter Section */}
+            <div className="mb-6">
+                <div className="flex items-center space-x-4">
+                    <div className="relative flex-1">
+                        <input
+                            type="text"
+                            placeholder="Search by Name..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <FaSearch className="absolute left-3 top-3 text-gray-400" />
+                    </div>
+                    <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className="p-2 border rounded-lg hover:bg-gray-100"
+                        title="Show Filters"
+                    >
+                        <FaFilter className="text-gray-600" />
+                    </button>
+                </div>
+
+                {/* Filter Options */}
+                {showFilters && (
+                    <div className="mt-4 p-4 bg-white border rounded-lg shadow-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                                <select
+                                    value={genderFilter}
+                                    onChange={(e) => setGenderFilter(e.target.value)}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="all">All Genders</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                <select
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="all">All Statuses</option>
+                                    <option value="Permanent">Permanent</option>
+                                    <option value="Temporary">Temporary</option>
+                                    <option value="Dead">Dead</option>
+                                    <option value="Moved">Moved</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {filteredResidents.length === 0 ? (
                 <div className="text-center py-8">
                     <p className="text-gray-500">No residents found.</p>
                 </div>
@@ -158,7 +232,7 @@ const ResidentList = () => {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {residents.map((resident, index) => (
+                            {filteredResidents.map((resident, index) => (
                                 <tr key={resident._id} className="hover:bg-gray-50">
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {index + 1}

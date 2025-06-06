@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUserPlus, FaUserEdit, FaTrash, FaEye } from 'react-icons/fa';
+import { FaUserPlus, FaUserEdit, FaTrash, FaEye, FaSearch, FaFilter } from 'react-icons/fa';
 import { getAllAccounts, deleteAccount } from '../../../services/accountService';
 
 const UserList = () => {
@@ -8,6 +8,11 @@ const UserList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [alert, setAlert] = useState({ type: '', message: '' });
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showFilters, setShowFilters] = useState(false);
+    const [roleFilter, setRoleFilter] = useState('all');
+    const [createdDateFilter, setCreatedDateFilter] = useState('');
+    const [lastUpdateFilter, setLastUpdateFilter] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -58,6 +63,16 @@ const UserList = () => {
         });
     };
 
+    // Filter users based on search term and filters
+    const filteredUsers = users.filter(user => {
+        const matchesSearch = user.Email.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesRole = roleFilter === 'all' || user.Role === roleFilter;
+        const matchesCreatedDate = !createdDateFilter || new Date(user.createdAt).toDateString() === new Date(createdDateFilter).toDateString();
+        const matchesLastUpdate = !lastUpdateFilter || new Date(user.updatedAt).toDateString() === new Date(lastUpdateFilter).toDateString();
+        
+        return matchesSearch && matchesRole && matchesCreatedDate && matchesLastUpdate;
+    });
+
     if (loading) return <div className="p-4">Loading...</div>;
     if (error) return <div className="p-4 text-red-500">{error}</div>;
 
@@ -92,7 +107,70 @@ const UserList = () => {
                 </button>
             </div>
 
-            {users.length === 0 ? (
+            {/* Search and Filter Section */}
+            <div className="mb-6">
+                <div className="flex items-center space-x-4">
+                    <div className="relative flex-1">
+                        <input
+                            type="text"
+                            placeholder="Search by Email..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <FaSearch className="absolute left-3 top-3 text-gray-400" />
+                    </div>
+                    <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className="p-2 border rounded-lg hover:bg-gray-100"
+                        title="Show Filters"
+                    >
+                        <FaFilter className="text-gray-600" />
+                    </button>
+                </div>
+
+                {/* Filter Options */}
+                {showFilters && (
+                    <div className="mt-4 p-4 bg-white border rounded-lg shadow-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                                <select
+                                    value={roleFilter}
+                                    onChange={(e) => setRoleFilter(e.target.value)}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="all">All Roles</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="leader">Leader</option>
+                                    <option value="accountant">Accountant</option>
+                                    <option value="resident">Resident</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Created Date</label>
+                                <input
+                                    type="date"
+                                    value={createdDateFilter}
+                                    onChange={(e) => setCreatedDateFilter(e.target.value)}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Last Update</label>
+                                <input
+                                    type="date"
+                                    value={lastUpdateFilter}
+                                    onChange={(e) => setLastUpdateFilter(e.target.value)}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {filteredUsers.length === 0 ? (
                 <div className="text-center text-gray-500 py-4">No users found</div>
             ) : (
                 <div className="overflow-x-auto">
@@ -108,7 +186,7 @@ const UserList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map((user, index) => (
+                            {filteredUsers.map((user, index) => (
                                 <tr key={user._id} className="hover:bg-gray-50">
                                     <td className="py-3 px-4 border-b">{index + 1}</td>
                                     <td className="py-3 px-4 border-b">{user.Email}</td>

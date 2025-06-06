@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllHouseholds, deleteHousehold } from '../../../services/householdService';
 import { getAllResidents } from '../../../services/residentService';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaSearch, FaFilter } from 'react-icons/fa';
 
 const HouseholdList = () => {
     const [households, setHouseholds] = useState([]);
@@ -10,6 +10,9 @@ const HouseholdList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [alert, setAlert] = useState({ type: '', message: '' });
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showFilters, setShowFilters] = useState(false);
+    const [headFilter, setHeadFilter] = useState('all'); // 'all', 'has', 'none'
     const role = localStorage.getItem("accountRole")?.toLowerCase() || "resident";
     const dashboardPrefix = role === "leader" ? "/leader-dashboard" : "/admin-dashboard";
     const navigate = useNavigate();
@@ -84,6 +87,17 @@ const HouseholdList = () => {
         }
     };
 
+    // Filter households based on search term and head filter
+    const filteredHouseholds = households.filter(household => {
+        const matchesSearch = household.Address.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesHeadFilter = 
+            headFilter === 'all' ? true :
+            headFilter === 'has' ? !!household.HouseHoldHeadID :
+            headFilter === 'none' ? !household.HouseHoldHeadID : true;
+        
+        return matchesSearch && matchesHeadFilter;
+    });
+
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -115,7 +129,50 @@ const HouseholdList = () => {
                 </button>
             </div>
 
-            {households.length === 0 ? (
+            {/* Search and Filter Section */}
+            <div className="mb-6">
+                <div className="flex items-center space-x-4">
+                    <div className="relative flex-1">
+                        <input
+                            type="text"
+                            placeholder="Search by Address..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <FaSearch className="absolute left-3 top-3 text-gray-400" />
+                    </div>
+                    <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className="p-2 border rounded-lg hover:bg-gray-100"
+                        title="Show Filters"
+                    >
+                        <FaFilter className="text-gray-600" />
+                    </button>
+                </div>
+
+                {/* Filter Options */}
+                {showFilters && (
+                    <div className="mt-4 p-4 bg-white border rounded-lg shadow-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Household Head Status</label>
+                                <select
+                                    value={headFilter}
+                                    onChange={(e) => setHeadFilter(e.target.value)}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="all">All Households</option>
+                                    <option value="has">Has Household Head</option>
+                                    <option value="none">No Household Head</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {filteredHouseholds.length === 0 ? (
                 <div className="text-center py-8">
                     <p className="text-gray-500">No households found.</p>
                 </div>
@@ -148,7 +205,7 @@ const HouseholdList = () => {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {households.map((household, index) => (
+                            {filteredHouseholds.map((household, index) => (
                                 <tr key={household._id} className="hover:bg-gray-50">
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {index + 1}

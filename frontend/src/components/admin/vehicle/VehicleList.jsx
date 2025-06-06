@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllVehicles, deleteVehicle } from '../../../services/vehicleService';
 import { getAllResidents } from '../../../services/residentService';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaSearch, FaFilter } from 'react-icons/fa';
 
 const VehicleList = () => {
     const navigate = useNavigate();
@@ -16,6 +16,10 @@ const VehicleList = () => {
     const [error, setError] = useState(null);
     const [households, setHouseholds] = useState([]);
     const [alert, setAlert] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showFilters, setShowFilters] = useState(false);
+    const [vehicleTypeFilter, setVehicleTypeFilter] = useState('all');
+    const [ownerFilter, setOwnerFilter] = useState('all');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -82,6 +86,22 @@ const VehicleList = () => {
         }
     };
 
+    // Filter vehicles based on search term and filters
+    const filteredVehicles = vehicles.filter(vehicle => {
+        const matchesSearch = vehicle.LicensePlate.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesType = vehicleTypeFilter === 'all' || vehicle.VehicleType === vehicleTypeFilter;
+        const ownerName = getResidentName(vehicle.HouseHoldID);
+        const matchesOwner = ownerFilter === 'all' || ownerName === ownerFilter;
+        
+        return matchesSearch && matchesType && matchesOwner;
+    });
+
+    // Get unique vehicle types for filter
+    const vehicleTypes = ['all', ...new Set(vehicles.map(v => v.VehicleType))];
+
+    // Get unique owners for filter
+    const owners = ['all', ...new Set(vehicles.map(v => getResidentName(v.HouseHoldID)))];
+
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -114,6 +134,65 @@ const VehicleList = () => {
                 </div>
             )}
 
+            {/* Search and Filter Section */}
+            <div className="mb-6">
+                <div className="flex items-center space-x-4">
+                    <div className="relative flex-1">
+                        <input
+                            type="text"
+                            placeholder="Search by License Plate..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <FaSearch className="absolute left-3 top-3 text-gray-400" />
+                    </div>
+                    <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className="p-2 border rounded-lg hover:bg-gray-100"
+                        title="Show Filters"
+                    >
+                        <FaFilter className="text-gray-600" />
+                    </button>
+                </div>
+
+                {/* Filter Options */}
+                {showFilters && (
+                    <div className="mt-4 p-4 bg-white border rounded-lg shadow-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle Type</label>
+                                <select
+                                    value={vehicleTypeFilter}
+                                    onChange={(e) => setVehicleTypeFilter(e.target.value)}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    {vehicleTypes.map(type => (
+                                        <option key={type} value={type}>
+                                            {type === 'all' ? 'All Types' : type}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Owner</label>
+                                <select
+                                    value={ownerFilter}
+                                    onChange={(e) => setOwnerFilter(e.target.value)}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    {owners.map(owner => (
+                                        <option key={owner} value={owner}>
+                                            {owner === 'all' ? 'All Owners' : owner}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
@@ -133,7 +212,7 @@ const VehicleList = () => {
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {vehicles.map((vehicle) => (
+                        {filteredVehicles.map((vehicle) => (
                             <tr key={vehicle._id}>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     {vehicle.LicensePlate}

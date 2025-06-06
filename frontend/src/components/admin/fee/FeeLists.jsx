@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUserPlus, FaUserEdit, FaTrash, FaEye } from 'react-icons/fa';
+import { FaUserPlus, FaUserEdit, FaTrash, FaEye, FaSearch, FaFilter } from 'react-icons/fa';
 import { getAllFees, deleteFee } from '../../../services/feeService';
 import { getAllFeeCollections } from '../../../services/feeCollectionService';
 
@@ -10,6 +10,10 @@ const FeeLists = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [alert, setAlert] = useState({ type: '', message: '' });
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showFilters, setShowFilters] = useState(false);
+    const [selectedCollection, setSelectedCollection] = useState('');
+    const [selectedFeeType, setSelectedFeeType] = useState('');
     const navigate = useNavigate();
 
     // Auto-hide alert after 3 seconds
@@ -91,6 +95,17 @@ const FeeLists = () => {
         return new Date(dateString).toLocaleDateString('en-US', options);
     };
 
+    // Filter fees based on search term and filters
+    const filteredFees = fees.filter(fee => {
+        const matchesSearch = fee.feeName.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCollection = !selectedCollection || fee.FeeCollectionID === selectedCollection;
+        const matchesFeeType = !selectedFeeType || fee.FeeType === selectedFeeType;
+        return matchesSearch && matchesCollection && matchesFeeType;
+    });
+
+    // Get unique fee types
+    const uniqueFeeTypes = [...new Set(fees.map(fee => fee.FeeType))];
+
     if (loading) return <div className="p-4">Loading...</div>;
     if (error) return <div className="p-4 text-red-500">{error}</div>;
 
@@ -125,6 +140,67 @@ const FeeLists = () => {
                 </button>
             </div>
 
+            {/* Search and Filter Section */}
+            <div className="mb-6">
+                <div className="flex items-center space-x-4">
+                    <div className="relative flex-1">
+                        <input
+                            type="text"
+                            placeholder="Search by Fee Name..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <FaSearch className="absolute left-3 top-3 text-gray-400" />
+                    </div>
+                    <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className="p-2 border rounded-lg hover:bg-gray-100"
+                        title="Show Filters"
+                    >
+                        <FaFilter className="text-gray-600" />
+                    </button>
+                </div>
+
+                {/* Filter Options */}
+                {showFilters && (
+                    <div className="mt-4 p-4 bg-white border rounded-lg shadow-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Fee Collection</label>
+                                <select
+                                    value={selectedCollection}
+                                    onChange={(e) => setSelectedCollection(e.target.value)}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">All Collections</option>
+                                    {collections.map(collection => (
+                                        <option key={collection._id} value={collection._id}>
+                                            {collection.Name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Fee Type</label>
+                                <select
+                                    value={selectedFeeType}
+                                    onChange={(e) => setSelectedFeeType(e.target.value)}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">All Fee Types</option>
+                                    {uniqueFeeTypes.map(type => (
+                                        <option key={type} value={type}>
+                                            {type}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
@@ -137,7 +213,7 @@ const FeeLists = () => {
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {fees.map((fee) => (
+                        {filteredFees.map((fee) => (
                             <tr key={fee._id}>
                                 <td className="px-6 py-4 whitespace-nowrap">{fee.FeeType}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{fee.feeName}</td>
