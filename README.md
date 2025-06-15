@@ -110,7 +110,7 @@ docker-compose up -d --build
 ## Cấu trúc thư mục
 ```
 .
-├── backend/           # Backend API (FastAPI)
+├── backend/           # Backend API (RESTful API)
 ├── frontend/         # Frontend (React + Vite)
 ├── docker-compose.yaml
 └── README.md
